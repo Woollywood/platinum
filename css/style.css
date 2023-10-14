@@ -663,37 +663,49 @@ h6 {
   position: absolute;
 }
 
+.page__background-ball::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 194, 255, 0)), to(#F71348));
+  background: -o-linear-gradient(top, rgba(0, 194, 255, 0) 0%, #F71348 100%);
+  background: linear-gradient(180deg, rgba(0, 194, 255, 0) 0%, #F71348 100%);
+  -webkit-filter: blur(100px);
+          filter: blur(100px);
+}
+
 @-webkit-keyframes floating-ball {
   from {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
+    -webkit-transform: translateX(0) rotate(0);
+            transform: translateX(0) rotate(0);
   }
 
   50% {
-    -webkit-transform: translateX(calc(var(--window-height) * 1.2));
-            transform: translateX(calc(var(--window-height) * 1.2));
+    -webkit-transform: translateX(calc(var(--window-height) * 1.2)) rotate(360deg);
+            transform: translateX(calc(var(--window-height) * 1.2)) rotate(360deg);
   }
 
   to {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
+    -webkit-transform: translateX(0) rotate(0);
+            transform: translateX(0) rotate(0);
   }
 }
 
 @keyframes floating-ball {
   from {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
+    -webkit-transform: translateX(0) rotate(0);
+            transform: translateX(0) rotate(0);
   }
 
   50% {
-    -webkit-transform: translateX(calc(var(--window-height) * 1.2));
-            transform: translateX(calc(var(--window-height) * 1.2));
+    -webkit-transform: translateX(calc(var(--window-height) * 1.2)) rotate(360deg);
+            transform: translateX(calc(var(--window-height) * 1.2)) rotate(360deg);
   }
 
   to {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
+    -webkit-transform: translateX(0) rotate(0);
+            transform: translateX(0) rotate(0);
   }
 }
 
@@ -1579,35 +1591,35 @@ html.has-scroll-dragging {
 
 @-webkit-keyframes floating-ball {
     from {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 
     50% {
-      -webkit-transform: translateX(calc(var(--window-height) * 2.2));
-              transform: translateX(calc(var(--window-height) * 2.2));
+      -webkit-transform: translateX(calc(var(--window-height) * 2.2)) rotate(360deg);
+              transform: translateX(calc(var(--window-height) * 2.2)) rotate(360deg);
     }
 
     to {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 }
 
 @keyframes floating-ball {
     from {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 
     50% {
-      -webkit-transform: translateX(calc(var(--window-height) * 2.2));
-              transform: translateX(calc(var(--window-height) * 2.2));
+      -webkit-transform: translateX(calc(var(--window-height) * 2.2)) rotate(360deg);
+              transform: translateX(calc(var(--window-height) * 2.2)) rotate(360deg);
     }
 
     to {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 }
 
@@ -1630,35 +1642,35 @@ html.has-scroll-dragging {
 
 @-webkit-keyframes floating-ball {
     from {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 
     50% {
-      -webkit-transform: translateX(calc(var(--window-height) * 2.6));
-              transform: translateX(calc(var(--window-height) * 2.6));
+      -webkit-transform: translateX(calc(var(--window-height) * 2.6)) rotate(360deg);
+              transform: translateX(calc(var(--window-height) * 2.6)) rotate(360deg);
     }
 
     to {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 }
 
 @keyframes floating-ball {
     from {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 
     50% {
-      -webkit-transform: translateX(calc(var(--window-height) * 2.6));
-              transform: translateX(calc(var(--window-height) * 2.6));
+      -webkit-transform: translateX(calc(var(--window-height) * 2.6)) rotate(360deg);
+              transform: translateX(calc(var(--window-height) * 2.6)) rotate(360deg);
     }
 
     to {
-      -webkit-transform: translateX(0);
-              transform: translateX(0);
+      -webkit-transform: translateX(0) rotate(0);
+              transform: translateX(0) rotate(0);
     }
 }
 
