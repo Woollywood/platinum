@@ -53,10 +53,9 @@ function initSliders() {
 			// для конкретного случая
 			observer: true,
 			observeParents: true,
-			slidesPerView: 6,
 			spaceBetween: 20,
 			speed: 800,
-			// loop: true,
+			loop: true,
 			grabCursor: true,
 
 			autoplay: {
@@ -64,30 +63,23 @@ function initSliders() {
 				disableOnInteraction: false,
 			},
 
-			/*
-			// Брейкпоинты
 			breakpoints: {
-				640: {
-					slidesPerView: 1,
-					spaceBetween: 0,
-					autoHeight: true,
+				320: {
+					slidesPerView: 2,
 				},
 				768: {
-					slidesPerView: 2,
-					spaceBetween: 20,
+					slidesPerView: 3,
 				},
 				992: {
-					slidesPerView: 3,
-					spaceBetween: 20,
+					slidesPerView: 4,
 				},
 				1268: {
-					slidesPerView: 4,
-					spaceBetween: 30,
+					slidesPerView: 5,
 				},
+				1440: {
+					slidesPerView: 6,
+				}
 			},
-			*/
-			// События
-			on: {},
 		});
 	}
 }

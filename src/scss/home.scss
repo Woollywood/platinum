@@ -1,14 +1,100 @@
 //====================================================================================================
 
 .page {
+	position: relative;
+
+	&__background-ball-wrapper {
+		position: relative;
+	}
+
+	&__background-ball {
+		position: fixed;
+		z-index: -1;
+
+		.has-scroll-smooth & {
+			position: absolute;
+		}
+
+		left: calc(rem(840) * -0.8);
+
+		width: rem(840);
+		height: rem(628);
+		border-radius: 50%;
+
+		opacity: 0.7;
+		background-color: rgba(24, 75, 255, 0.4);
+		filter: blur(100px);
+		animation: floating-ball 6s ease infinite;
+
+		@media (max-width: $mobile) {
+			width: rem(616);
+			height: rem(460);
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			border-radius: 50%;
+			background: linear-gradient(180deg, rgba(0, 194, 255, 0.00) 0%, #F71348 100%);
+			filter: blur(100px);
+		}
+	}
+}
+
+@keyframes floating-ball {
+	from {
+		transform: translateX(0) rotate(0);
+	}
+
+	50% {
+		transform: translateX(calc(var(--window-height) * 1.2)) rotate(360deg);
+	}
+
+	to {
+		transform: translateX(0) rotate(0);
+	}
+}
+
+@media (max-width: $mobile) {
+	@keyframes floating-ball {
+		from {
+			transform: translateX(0) rotate(0);
+		}
+
+		50% {
+			transform: translateX(calc(var(--window-height) * 2.2)) rotate(360deg);
+		}
+
+		to {
+			transform: translateX(0) rotate(0);
+		}
+	}
+}
+
+@media (max-width: $mobileSmall) {
+	@keyframes floating-ball {
+		from {
+			transform: translateX(0) rotate(0);
+		}
+
+		50% {
+			transform: translateX(calc(var(--window-height) * 2.6)) rotate(360deg);
+		}
+
+		to {
+			transform: translateX(0) rotate(0);
+		}
+	}
 }
 
 .main-block {
+	@include adaptiveValue('padding-top', 98, 88, 0, $maxWidthContainer, 375);
 	@include adaptiveValue('padding-bottom', 72, 88, 0, $maxWidthContainer, 375);
 
 	&__container {
 		&:not(:last-child) {
-			margin-bottom: rem(6);
+			@include adaptiveValue('margin-bottom', 6, 48, 0, $maxWidthContainer, 375);
 		}
 	}
 
@@ -24,12 +110,18 @@
 		&:not(:last-child) {
 			@include adaptiveValue('margin-bottom', 26, 24, 0, $maxWidthContainer, 375);
 		}
+
+		max-width: rem(1120);
+		margin: 0 auto;
 	}
 
 	&__text {
 		color: cl('grey');
 		text-align: center;
 		@include adaptiveValue('font-size', 25, 20, 0, $maxWidthContainer, 375);
+
+		max-width: rem(580);
+		margin: 0 auto;
 	}
 
 	&__slider {
@@ -45,6 +137,7 @@
 		height: 20%;
 		z-index: 1;
 		width: 100%;
+		min-width: rem(1198);
 
 		img {
 			object-fit: cover;
@@ -97,7 +190,12 @@
 
 	&__background-ibg {
 		width: 100%;
-		aspect-ratio: 16 / 8;
+		@media (min-width: $mobile) {
+			aspect-ratio: 16 / 8;
+		}
+		@media (max-width: $mobile) {
+			aspect-ratio: 9 / 16;
+		}
 
 		&::before {
 			content: '';
@@ -133,6 +231,9 @@
 	@include adaptiveValue('padding-top', 148, 122, 0, $maxWidthContainer, 375);
 
 	&__container {
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 160, 112, 0, $maxWidthContainer, 375);
+		}
 	}
 
 	&__body {
@@ -183,6 +284,312 @@
 
 		@media (min-width: $pc) {
 			margin: 0 rem(-120);
+		}
+	}
+
+	&__map {
+		position: relative;
+		width: 100%;
+		padding-bottom: 60%;
+
+		svg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
+}
+
+.craft {
+	padding-bottom: rem(124);
+
+	&__container {
+	}
+
+	&__body {
+	}
+
+	&__title {
+		max-width: rem(720);
+		margin: 0 auto;
+		text-align: center;
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 100, 80, 0, $maxWidthContainer, 375);
+		}
+
+		span {
+			background-color: cl('white');
+			color: cl('background');
+		}
+	}
+
+	&__cards {
+		@media (min-width: $pc) {
+			padding: 0 rem(68);
+		}
+
+		@media (min-width: $mobileSmall) {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			@include adaptiveValue('gap', 120, 60, 0, $maxWidthContainer, 1024);
+		}
+	}
+
+	&__cards-left {
+		@media (max-width: $mobileSmall) {
+			&:not(:last-child) {
+				@include adaptiveValue('margin-bottom', 60, 40, 0, $maxWidthContainer, 375);
+			}
+		}
+	}
+
+	&__card {
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 60, 40, 0, $maxWidthContainer, 375);
+		}
+	}
+
+	&__cards-right {
+		@media (min-width: $mobileSmall) {
+			padding-top: rem(90);
+
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	&__cards-more-wrapper {
+		flex: 1 1 auto;
+
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+
+		@media (min-width: $mobileSmall) {
+			margin-top: rem(-90);
+		}
+
+		@media (max-width: $mobileSmall) {
+			margin-top: rem(48);
+		}
+	}
+
+	&__cards-more-button {
+		display: inline-flex;
+		justify-content: center;
+		gap: rem(6);
+		flex-direction: column;
+		align-items: flex-start;
+
+		margin: 0 auto;
+
+		@include adaptiveValue('width', 240, 132, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('height', 240, 132, 0, $maxWidthContainer, 375);
+		background: url('@img/icons/circle-background.svg') center no-repeat;
+		background-size: cover;
+	}
+
+	&__cards-more-button-inner {
+		margin: 0 auto;
+
+		svg {
+			width: rem(22);
+			height: rem(22);
+		}
+	}
+
+	&__cards-more-text {
+		color: cl('background');
+		@include adaptiveValue('font-size', 18, 16, 0, $maxWidthContainer, 375);
+		font-weight: 700;
+	}
+}
+
+.card-craft {
+	position: relative;
+
+	&:hover {
+		.card-craft__view {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+
+	&__image-ibg {
+		width: 100%;
+		padding-bottom: 140%;
+
+		@media (max-width: $mobileSmall) {
+			padding-bottom: 100%;
+		}
+
+		&:not(:last-child) {
+			margin-bottom: rem(24);
+		}
+	}
+
+	&__text-wrapper {
+	}
+
+	&__title {
+		font-family: Syne, sans-serif;
+		@include adaptiveValue('font-size', 30, 24, 0, $maxWidthContainer, 375);
+		font-weight: 500;
+
+		&:not(:last-child) {
+			margin-bottom: rem(2);
+		}
+	}
+
+	&__text {
+		@include adaptiveValue('font-size', 18, 16, 0, $maxWidthContainer, 375);
+	}
+
+	&__view {
+		position: absolute;
+		z-index: 3;
+
+		@include adaptiveValue('top', -56, -40, 0, $maxWidthContainer, 375);
+		right: 4%;
+
+		@media (any-hover: hover) {
+			top: 20%;
+			@include adaptiveValue('right', -56, -40, 0, $maxWidthContainer, 375);
+
+			opacity: 0;
+			visibility: hidden;
+		}
+		transition: all 0.3s ease;
+
+		@include adaptiveValue('width', 112, 80, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('height', 112, 80, 0, $maxWidthContainer, 375);
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+
+		svg {
+			max-width: 100%;
+		}
+	}
+}
+
+.service {
+	@include adaptiveValue('padding-bottom', 460, 120, 0, $maxWidthContainer, 375);
+
+	&__container {
+	}
+
+	&__body {
+	}
+
+	&__title {
+		max-width: rem(820);
+		text-align: center;
+		margin: 0 auto;
+
+		span {
+			background-color: cl('white');
+			color: cl('background');
+		}
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 90, 64, 0, $maxWidthContainer, 375);
+		}
+	}
+
+	&__content {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		@include adaptiveValue('gap', 28, 16, 0, $maxWidthContainer, 375);
+
+		overflow: auto;
+	}
+
+	&__item {
+		min-width: rem(258);
+	}
+}
+
+.item-service {
+	width: 100%;
+
+	&:hover {
+		.item-service__image-ibg {
+			.hidden {
+				display: none;
+			}
+
+			.shown {
+				display: block;
+			}
+		}
+	}
+
+	&__title {
+		font-family: Syne, sans-serif;
+		@include adaptiveValue('font-size', 30, 24, 0, $maxWidthContainer, 375);
+		font-weight: 500;
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 30, 24, 0, $maxWidthContainer, 375);
+		}
+	}
+
+	&__image-ibg {
+		width: 100%;
+		padding-bottom: 100%;
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 38, 24, 0, $maxWidthContainer, 375);
+		}
+
+		.shown {
+			display: none;
+		}
+
+		.hidden {
+			object-fit: fill;
+		}
+	}
+
+	&__text {
+		@include adaptiveValue('font-size', 20, 16, 0, $maxWidthContainer, 375);
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 32, 24, 0, $maxWidthContainer, 375);
+		}
+	}
+
+	&__link {
+		@include adaptiveValue('width', 56, 48, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('height', 56, 48, 0, $maxWidthContainer, 375);
+		background: url('@img/icons/circle-border.svg') no-repeat;
+		background-size: cover;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+
+		&:hover {
+			background: url('@img/icons/circle-background.svg') no-repeat;
+			background-size: cover;
+
+			svg {
+				fill: cl('background');
+			}
+		}
+
+		svg {
+			@include adaptiveValue('width', 24, 18, 0, $maxWidthContainer, 375);
+			@include adaptiveValue('height', 24, 18, 0, $maxWidthContainer, 375);
+			fill: cl('white');
 		}
 	}
 }

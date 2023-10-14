@@ -69,6 +69,7 @@
 		"sass": "latest",
 		"sass-loader": "latest",
 		"smooth-scroll": "latest",
+		"split-type": "^0.3.3",
 		"string-replace-loader": "latest",
 		"style-loader": "latest",
 		"swiper": "latest",
