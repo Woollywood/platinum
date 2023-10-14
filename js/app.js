@@ -10162,10 +10162,485 @@ object-assign
         } ]);
     }();
     const locomotive_scroll_esm = Smooth;
+    (() => {
+        function append(...nodes) {
+            const length = nodes.length;
+            for (let i = 0; i < length; i++) {
+                const node = nodes[i];
+                if (node.nodeType === 1 || node.nodeType === 11) this.appendChild(node); else this.appendChild(document.createTextNode(String(node)));
+            }
+        }
+        function replaceChildren(...nodes) {
+            while (this.lastChild) this.removeChild(this.lastChild);
+            if (nodes.length) this.append(...nodes);
+        }
+        function replaceWith(...nodes) {
+            const parent = this.parentNode;
+            let i = nodes.length;
+            if (!parent) return;
+            if (!i) parent.removeChild(this);
+            while (i--) {
+                let node = nodes[i];
+                if (typeof node !== "object") node = this.ownerDocument.createTextNode(node); else if (node.parentNode) node.parentNode.removeChild(node);
+                if (!i) parent.replaceChild(node, this); else parent.insertBefore(this.previousSibling, node);
+            }
+        }
+        if (typeof Element !== "undefined") {
+            if (!Element.prototype.append) {
+                Element.prototype.append = append;
+                DocumentFragment.prototype.append = append;
+            }
+            if (!Element.prototype.replaceChildren) {
+                Element.prototype.replaceChildren = replaceChildren;
+                DocumentFragment.prototype.replaceChildren = replaceChildren;
+            }
+            if (!Element.prototype.replaceWith) {
+                Element.prototype.replaceWith = replaceWith;
+                DocumentFragment.prototype.replaceWith = replaceWith;
+            }
+        }
+    })();
+    function dist_extend(target, object) {
+        return Object.getOwnPropertyNames(Object(target)).reduce(((extended, key) => {
+            const currentValue = Object.getOwnPropertyDescriptor(Object(target), key);
+            const newValue = Object.getOwnPropertyDescriptor(Object(object), key);
+            return Object.defineProperty(extended, key, newValue || currentValue);
+        }), {});
+    }
+    function isString(value) {
+        return typeof value === "string";
+    }
+    function isArray(value) {
+        return Array.isArray(value);
+    }
+    function parseSettings(settings = {}) {
+        const object = dist_extend(settings);
+        let types;
+        if (object.types !== void 0) types = object.types; else if (object.split !== void 0) types = object.split;
+        if (types !== void 0) object.types = (isString(types) || isArray(types) ? String(types) : "").split(",").map((type => String(type).trim())).filter((type => /((line)|(word)|(char))/i.test(type)));
+        if (object.absolute || object.position) object.absolute = object.absolute || /absolute/.test(settings.position);
+        return object;
+    }
+    function parseTypes(value) {
+        const types = isString(value) || isArray(value) ? String(value) : "";
+        return {
+            none: !types,
+            lines: /line/i.test(types),
+            words: /word/i.test(types),
+            chars: /char/i.test(types)
+        };
+    }
+    function dist_isObject(value) {
+        return value !== null && typeof value === "object";
+    }
+    function dist_isNode(input) {
+        return dist_isObject(input) && /^(1|3|11)$/.test(input.nodeType);
+    }
+    function isLength(value) {
+        return typeof value === "number" && value > -1 && value % 1 === 0;
+    }
+    function isArrayLike(value) {
+        return dist_isObject(value) && isLength(value.length);
+    }
+    function dist_toArray(value) {
+        if (isArray(value)) return value;
+        if (value == null) return [];
+        return isArrayLike(value) ? Array.prototype.slice.call(value) : [ value ];
+    }
+    function getTargetElements(target) {
+        let elements = target;
+        if (isString(target)) if (/^(#[a-z]\w+)$/.test(target.trim())) elements = document.getElementById(target.trim().slice(1)); else elements = document.querySelectorAll(target);
+        return dist_toArray(elements).reduce(((result, element) => [ ...result, ...dist_toArray(element).filter(dist_isNode) ]), []);
+    }
+    const {entries, keys, values} = Object;
+    const expando = `_splittype`;
+    const cache = {};
+    let uid = 0;
+    function set(owner, key, value) {
+        if (!dist_isObject(owner)) {
+            console.warn("[data.set] owner is not an object");
+            return null;
+        }
+        const id = owner[expando] || (owner[expando] = ++uid);
+        const data = cache[id] || (cache[id] = {});
+        if (value === void 0) {
+            if (!!key && Object.getPrototypeOf(key) === Object.prototype) cache[id] = {
+                ...data,
+                ...key
+            };
+        } else if (key !== void 0) data[key] = value;
+        return value;
+    }
+    function get(owner, key) {
+        const id = dist_isObject(owner) ? owner[expando] : null;
+        const data = id && cache[id] || {};
+        if (key === void 0) return data;
+        return data[key];
+    }
+    function remove(element) {
+        const id = element && element[expando];
+        if (id) {
+            delete element[id];
+            delete cache[id];
+        }
+    }
+    function cleanup() {
+        entries(cache).forEach((([id, {isRoot, isSplit}]) => {
+            if (!isRoot || !isSplit) {
+                cache[id] = null;
+                delete cache[id];
+            }
+        }));
+    }
+    function toWords(value, separator = " ") {
+        const string = value ? String(value) : "";
+        return string.trim().replace(/\s+/g, " ").split(separator);
+    }
+    const rsAstralRange = "\\ud800-\\udfff";
+    const rsComboMarksRange = "\\u0300-\\u036f\\ufe20-\\ufe23";
+    const rsComboSymbolsRange = "\\u20d0-\\u20f0";
+    const rsVarRange = "\\ufe0e\\ufe0f";
+    const rsAstral = `[${rsAstralRange}]`;
+    const rsCombo = `[${rsComboMarksRange}${rsComboSymbolsRange}]`;
+    const rsFitz = "\\ud83c[\\udffb-\\udfff]";
+    const rsModifier = `(?:${rsCombo}|${rsFitz})`;
+    const rsNonAstral = `[^${rsAstralRange}]`;
+    const rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+    const rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+    const rsZWJ = "\\u200d";
+    const reOptMod = `${rsModifier}?`;
+    const rsOptVar = `[${rsVarRange}]?`;
+    const rsOptJoin = "(?:" + rsZWJ + "(?:" + [ rsNonAstral, rsRegional, rsSurrPair ].join("|") + ")" + rsOptVar + reOptMod + ")*";
+    const rsSeq = rsOptVar + reOptMod + rsOptJoin;
+    const rsSymbol = `(?:${[ `${rsNonAstral}${rsCombo}?`, rsCombo, rsRegional, rsSurrPair, rsAstral ].join("|")}\n)`;
+    const reUnicode = RegExp(`${rsFitz}(?=${rsFitz})|${rsSymbol}${rsSeq}`, "g");
+    const unicodeRange = [ rsZWJ, rsAstralRange, rsComboMarksRange, rsComboSymbolsRange, rsVarRange ];
+    const reHasUnicode = RegExp(`[${unicodeRange.join("")}]`);
+    function asciiToArray(string) {
+        return string.split("");
+    }
+    function hasUnicode(string) {
+        return reHasUnicode.test(string);
+    }
+    function unicodeToArray(string) {
+        return string.match(reUnicode) || [];
+    }
+    function stringToArray(string) {
+        return hasUnicode(string) ? unicodeToArray(string) : asciiToArray(string);
+    }
+    function dist_toString(value) {
+        return value == null ? "" : String(value);
+    }
+    function toChars(string, separator = "") {
+        string = dist_toString(string);
+        if (string && isString(string)) if (!separator && hasUnicode(string)) return stringToArray(string);
+        return string.split(separator);
+    }
+    function dist_createElement(name, attributes) {
+        const element = document.createElement(name);
+        if (!attributes) return element;
+        Object.keys(attributes).forEach((attribute => {
+            const rawValue = attributes[attribute];
+            const value = isString(rawValue) ? rawValue.trim() : rawValue;
+            if (value === null || value === "") return;
+            if (attribute === "children") element.append(...dist_toArray(value)); else element.setAttribute(attribute, value);
+        }));
+        return element;
+    }
+    var dist_defaults = {
+        splitClass: "",
+        lineClass: "line",
+        wordClass: "word",
+        charClass: "char",
+        types: [ "lines", "words", "chars" ],
+        absolute: false,
+        tagName: "div"
+    };
+    function splitWordsAndChars(textNode, settings) {
+        settings = dist_extend(dist_defaults, settings);
+        const types = parseTypes(settings.types);
+        const TAG_NAME = settings.tagName;
+        const VALUE = textNode.nodeValue;
+        const splitText = document.createDocumentFragment();
+        let words = [];
+        let chars = [];
+        if (/^\s/.test(VALUE)) splitText.append(" ");
+        words = toWords(VALUE).reduce(((result, WORD, idx, arr) => {
+            let wordElement;
+            let characterElementsForCurrentWord;
+            if (types.chars) characterElementsForCurrentWord = toChars(WORD).map((CHAR => {
+                const characterElement = dist_createElement(TAG_NAME, {
+                    class: `${settings.splitClass} ${settings.charClass}`,
+                    style: "display: inline-block;",
+                    children: CHAR
+                });
+                set(characterElement, "isChar", true);
+                chars = [ ...chars, characterElement ];
+                return characterElement;
+            }));
+            if (types.words || types.lines) {
+                wordElement = dist_createElement(TAG_NAME, {
+                    class: `${settings.wordClass} ${settings.splitClass}`,
+                    style: `display: inline-block; ${types.words && settings.absolute ? `position: relative;` : ""}`,
+                    children: types.chars ? characterElementsForCurrentWord : WORD
+                });
+                set(wordElement, {
+                    isWord: true,
+                    isWordStart: true,
+                    isWordEnd: true
+                });
+                splitText.appendChild(wordElement);
+            } else characterElementsForCurrentWord.forEach((characterElement => {
+                splitText.appendChild(characterElement);
+            }));
+            if (idx < arr.length - 1) splitText.append(" ");
+            return types.words ? result.concat(wordElement) : result;
+        }), []);
+        if (/\s$/.test(VALUE)) splitText.append(" ");
+        textNode.replaceWith(splitText);
+        return {
+            words,
+            chars
+        };
+    }
+    function split(node, settings) {
+        const type = node.nodeType;
+        const wordsAndChars = {
+            words: [],
+            chars: []
+        };
+        if (!/(1|3|11)/.test(type)) return wordsAndChars;
+        if (type === 3 && /\S/.test(node.nodeValue)) return splitWordsAndChars(node, settings);
+        const childNodes = dist_toArray(node.childNodes);
+        if (childNodes.length) {
+            set(node, "isSplit", true);
+            if (!get(node).isRoot) {
+                node.style.display = "inline-block";
+                node.style.position = "relative";
+                const nextSibling = node.nextSibling;
+                const prevSibling = node.previousSibling;
+                const text = node.textContent || "";
+                const textAfter = nextSibling ? nextSibling.textContent : " ";
+                const textBefore = prevSibling ? prevSibling.textContent : " ";
+                set(node, {
+                    isWordEnd: /\s$/.test(text) || /^\s/.test(textAfter),
+                    isWordStart: /^\s/.test(text) || /\s$/.test(textBefore)
+                });
+            }
+        }
+        return childNodes.reduce(((result, child) => {
+            const {words, chars} = split(child, settings);
+            return {
+                words: [ ...result.words, ...words ],
+                chars: [ ...result.chars, ...chars ]
+            };
+        }), wordsAndChars);
+    }
+    function getPosition(node, isWord, settings, scrollPos) {
+        if (!settings.absolute) return {
+            top: isWord ? node.offsetTop : null
+        };
+        const parent = node.offsetParent;
+        const [scrollX, scrollY] = scrollPos;
+        let parentX = 0;
+        let parentY = 0;
+        if (parent && parent !== document.body) {
+            const parentRect = parent.getBoundingClientRect();
+            parentX = parentRect.x + scrollX;
+            parentY = parentRect.y + scrollY;
+        }
+        const {width, height, x, y} = node.getBoundingClientRect();
+        const top = y + scrollY - parentY;
+        const left = x + scrollX - parentX;
+        return {
+            width,
+            height,
+            top,
+            left
+        };
+    }
+    function unSplitWords(element) {
+        if (!get(element).isWord) dist_toArray(element.children).forEach((child => unSplitWords(child))); else {
+            remove(element);
+            element.replaceWith(...element.childNodes);
+        }
+    }
+    const createFragment = () => document.createDocumentFragment();
+    function repositionAfterSplit(element, settings, scrollPos) {
+        const types = parseTypes(settings.types);
+        const TAG_NAME = settings.tagName;
+        const nodes = element.getElementsByTagName("*");
+        const wordsInEachLine = [];
+        let wordsInCurrentLine = [];
+        let lineOffsetY = null;
+        let elementHeight;
+        let elementWidth;
+        let contentBox;
+        let lines = [];
+        const parent = element.parentElement;
+        const nextSibling = element.nextElementSibling;
+        const splitText = createFragment();
+        const cs = window.getComputedStyle(element);
+        const align = cs.textAlign;
+        const fontSize = parseFloat(cs.fontSize);
+        const lineThreshold = fontSize * .2;
+        if (settings.absolute) {
+            contentBox = {
+                left: element.offsetLeft,
+                top: element.offsetTop,
+                width: element.offsetWidth
+            };
+            elementWidth = element.offsetWidth;
+            elementHeight = element.offsetHeight;
+            set(element, {
+                cssWidth: element.style.width,
+                cssHeight: element.style.height
+            });
+        }
+        dist_toArray(nodes).forEach((node => {
+            const isWordLike = node.parentElement === element;
+            const {width, height, top, left} = getPosition(node, isWordLike, settings, scrollPos);
+            if (/^br$/i.test(node.nodeName)) return;
+            if (types.lines && isWordLike) {
+                if (lineOffsetY === null || top - lineOffsetY >= lineThreshold) {
+                    lineOffsetY = top;
+                    wordsInEachLine.push(wordsInCurrentLine = []);
+                }
+                wordsInCurrentLine.push(node);
+            }
+            if (settings.absolute) set(node, {
+                top,
+                left,
+                width,
+                height
+            });
+        }));
+        if (parent) parent.removeChild(element);
+        if (types.lines) {
+            lines = wordsInEachLine.map((wordsInThisLine => {
+                const lineElement = dist_createElement(TAG_NAME, {
+                    class: `${settings.splitClass} ${settings.lineClass}`,
+                    style: `display: block; text-align: ${align}; width: 100%;`
+                });
+                set(lineElement, "isLine", true);
+                const lineDimensions = {
+                    height: 0,
+                    top: 1e4
+                };
+                splitText.appendChild(lineElement);
+                wordsInThisLine.forEach(((wordOrElement, idx, arr) => {
+                    const {isWordEnd, top, height} = get(wordOrElement);
+                    const next = arr[idx + 1];
+                    lineDimensions.height = Math.max(lineDimensions.height, height);
+                    lineDimensions.top = Math.min(lineDimensions.top, top);
+                    lineElement.appendChild(wordOrElement);
+                    if (isWordEnd && get(next).isWordStart) lineElement.append(" ");
+                }));
+                if (settings.absolute) set(lineElement, {
+                    height: lineDimensions.height,
+                    top: lineDimensions.top
+                });
+                return lineElement;
+            }));
+            if (!types.words) unSplitWords(splitText);
+            element.replaceChildren(splitText);
+        }
+        if (settings.absolute) {
+            element.style.width = `${element.style.width || elementWidth}px`;
+            element.style.height = `${elementHeight}px`;
+            dist_toArray(nodes).forEach((node => {
+                const {isLine, top, left, width, height} = get(node);
+                const parentData = get(node.parentElement);
+                const isChildOfLineNode = !isLine && parentData.isLine;
+                node.style.top = `${isChildOfLineNode ? top - parentData.top : top}px`;
+                node.style.left = isLine ? `${contentBox.left}px` : `${left - (isChildOfLineNode ? contentBox.left : 0)}px`;
+                node.style.height = `${height}px`;
+                node.style.width = isLine ? `${contentBox.width}px` : `${width}px`;
+                node.style.position = "absolute";
+            }));
+        }
+        if (parent) if (nextSibling) parent.insertBefore(element, nextSibling); else parent.appendChild(element);
+        return lines;
+    }
+    let split_type_dist_defaults = dist_extend(dist_defaults, {});
+    class SplitType {
+        static get data() {
+            return cache;
+        }
+        static get defaults() {
+            return split_type_dist_defaults;
+        }
+        static set defaults(options) {
+            split_type_dist_defaults = dist_extend(split_type_dist_defaults, parseSettings(options));
+        }
+        static setDefaults(options) {
+            split_type_dist_defaults = dist_extend(split_type_dist_defaults, parseSettings(options));
+            return dist_defaults;
+        }
+        static revert(elements) {
+            getTargetElements(elements).forEach((element => {
+                const {isSplit, html, cssWidth, cssHeight} = get(element);
+                if (isSplit) {
+                    element.innerHTML = html;
+                    element.style.width = cssWidth || "";
+                    element.style.height = cssHeight || "";
+                    remove(element);
+                }
+            }));
+        }
+        static create(target, options) {
+            return new SplitType(target, options);
+        }
+        constructor(elements, options) {
+            this.isSplit = false;
+            this.settings = dist_extend(split_type_dist_defaults, parseSettings(options));
+            this.elements = getTargetElements(elements);
+            this.split();
+        }
+        split(options) {
+            this.revert();
+            this.elements.forEach((element => {
+                set(element, "html", element.innerHTML);
+            }));
+            this.lines = [];
+            this.words = [];
+            this.chars = [];
+            const scrollPos = [ window.pageXOffset, window.pageYOffset ];
+            if (options !== void 0) this.settings = dist_extend(this.settings, parseSettings(options));
+            const types = parseTypes(this.settings.types);
+            if (types.none) return;
+            this.elements.forEach((element => {
+                set(element, "isRoot", true);
+                const {words, chars} = split(element, this.settings);
+                this.words = [ ...this.words, ...words ];
+                this.chars = [ ...this.chars, ...chars ];
+            }));
+            this.elements.forEach((element => {
+                if (types.lines || this.settings.absolute) {
+                    const lines = repositionAfterSplit(element, this.settings, scrollPos);
+                    this.lines = [ ...this.lines, ...lines ];
+                }
+            }));
+            this.isSplit = true;
+            window.scrollTo(scrollPos[0], scrollPos[1]);
+            cleanup();
+        }
+        revert() {
+            if (this.isSplit) {
+                this.lines = null;
+                this.words = null;
+                this.chars = null;
+                this.isSplit = false;
+            }
+            SplitType.revert(this.elements);
+        }
+    }
     gsapWithCSS.registerPlugin(ScrollTrigger_ScrollTrigger);
     const smoothScrolling = new locomotive_scroll_esm({
         el: document.querySelector("[data-scroll-container]"),
-        smooth: true
+        smooth: true,
+        tablet: true,
+        smartphone: true
     });
     smoothScrolling.on("scroll", ScrollTrigger_ScrollTrigger.update);
     ScrollTrigger_ScrollTrigger.scrollerProxy("[data-scroll-container]", {
@@ -10182,8 +10657,69 @@ object-assign
         },
         pinType: document.querySelector("[data-scroll-container]").style.transform ? "transform" : "fixed"
     });
+    init();
     ScrollTrigger_ScrollTrigger.addEventListener("refresh", (() => smoothScrolling.update()));
     ScrollTrigger_ScrollTrigger.refresh();
+    function init() {
+        splitTextInit();
+        splitText();
+        scrollScale();
+    }
+    function splitTextInit() {
+        const splitTypes = document.querySelectorAll("[data-reveal-init]");
+        splitTypes.forEach(((char, i) => {
+            const text = new SplitType(char, {
+                types: "chars, words"
+            });
+            gsapWithCSS.from(text.chars, {
+                y: 100,
+                opacity: 0,
+                stagger: .06,
+                duration: .1,
+                scrollTrigger: {
+                    trigger: char,
+                    start: "top 80%",
+                    end: "top 20%",
+                    scroller: "[data-scroll-container]"
+                }
+            });
+        }));
+    }
+    function splitText() {
+        const splitTypes = document.querySelectorAll("[data-reveal-type]");
+        splitTypes.forEach(((char, i) => {
+            const text = new SplitType(char, {
+                types: "chars, words"
+            });
+            gsapWithCSS.from(text.chars, {
+                y: 100,
+                opacity: 0,
+                stagger: .1,
+                scrollTrigger: {
+                    trigger: char,
+                    start: "top 80%",
+                    end: "top 20%",
+                    scroller: "[data-scroll-container]",
+                    scrub: true
+                }
+            });
+        }));
+    }
+    function scrollScale() {
+        const scaleBlocks = document.querySelectorAll("[data-gsap-scale]");
+        scaleBlocks.forEach((scaleBlock => {
+            gsapWithCSS.from(scaleBlock, {
+                scale: .8,
+                scrollTrigger: {
+                    trigger: scaleBlock,
+                    start: "top 70%",
+                    end: "top 50%",
+                    scrub: true,
+                    scroller: "[data-scroll-container]"
+                }
+            });
+        }));
+    }
     gsapWithCSS.registerPlugin(ScrollTrigger_ScrollTrigger);
     class DynamicAdapt {
         constructor(type) {
@@ -10272,11 +10808,16 @@ object-assign
     document.addEventListener("DOMContentLoaded", (event => {
         headerHeight();
         window.addEventListener("resize", headerHeight);
+        floatingBallsInitStyle();
+        window.addEventListener("resize", floatingBallsInitStyle);
     }));
     function headerHeight() {
         const header = document.querySelector(".header");
         const headerBox = header.getBoundingClientRect();
         document.documentElement.style.cssText += `--header-height: ${headerBox.height}px`;
+    }
+    function floatingBallsInitStyle() {
+        document.documentElement.style.cssText += `--window-height: ${window.innerWidth}px`;
     }
     window["FLS"] = true;
     isWebp();

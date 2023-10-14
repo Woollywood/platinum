@@ -6,7 +6,7 @@
 	<meta charset="UTF-8" />
 	<meta name="format-detection" content="telephone=no" />
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20231014223004" />
+	<link rel="stylesheet" href="css/style.min.css?_v=20231015021538" />
 	<link rel="shortcut icon" href="favicon.ico" />
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,7 +21,7 @@
 </head>
 
 <body>
-	<div class="wrapper" data-scroll-container>
+	<div class="wrapper" id="wrapper" data-scroll-container>
 		<header class="header">
 			<div class="header__container _container">
 				<div class="header__body">
@@ -31,7 +31,10 @@
 					<div class="header__right">
 						<nav class="header__menu menu" data-da=".menu-mobile, 767.98, 0">
 							<ul class="menu__list">
-								<li class="menu__item"><a class="menu__link" href="#">Main</a></li>
+								<li class="menu__item">
+									<div class="menu__link menu__link--desktop">-</div>
+								</li>
+								<li class="menu__item"><a class="menu__link menu__link--main" href="#">Main</a></li>
 								<li class="menu__item"><a class="menu__link" href="#">About Us</a></li>
 								<li class="menu__item"><a class="menu__link" href="#">Portfolio</a></li>
 								<li class="menu__item"><a class="menu__link" href="#">Contacts</a></li>
@@ -84,11 +87,15 @@
 		</header>
 
 		<main class="page">
+			<div class="page__background-ball-wrapper" data-scroll data-scroll-sticky data-scroll-target="#wrapper">
+				<div class="page__background-ball" data-background-ball></div>
+			</div>
+
 			<section class="main-block">
 				<div class="main-block__container _container">
 					<div class="main-block__text-wrapper">
-						<h1 class="main-block__title">Take your exhibition services to the next level</h1>
-						<p class="main-block__text">
+						<h1 class="main-block__title" data-reveal-init>Take your exhibition services to the next level</h1>
+						<p class="main-block__text" data-reveal-init>
 							We provide services of organizing exhibitions. We make participation in the exhibition
 							as comfortable as possible.
 						</p>
@@ -196,7 +203,7 @@
 				</button>
 			</section>
 			<div class="video-section">
-				<div class="video-section__background-ibg">
+				<div class="video-section__background-ibg" data-gsap-scale>
 					<picture><source srcset="img/video-section/background.webp" type="image/webp"><img src="img/video-section/background.jpg" alt="background" /></picture>
 				</div>
 				<button class="video-section__play">
@@ -209,7 +216,7 @@
 				<div class="we-do__container _container">
 					<div class="we-do__body">
 						<div class="we-do__top">
-							<h2 class="we-do__title section-title">What<span> we do?</span></h2>
+							<h2 class="we-do__title section-title" data-reveal-type>What<span> we do?</span></h2>
 							<div class="we-do__text-wrapper">
 								<p class="we-do__text">
 									Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
@@ -222,7 +229,7 @@
 								</p>
 							</div>
 						</div>
-						<h3 class="we-do__sub-title">We can fulfill the order all over the world</h3>
+						<h3 class="we-do__sub-title" data-reveal-type>We can fulfill the order all over the world</h3>
 					</div>
 				</div>
 				<div class="we-do__map">
@@ -3788,7 +3795,7 @@
 			<section class="craft">
 				<div class="craft__container _container">
 					<div class="craft__body">
-						<h2 class="craft__title section-title">
+						<h2 class="craft__title section-title" data-reveal-type="">
 							We Work to Craft Solid Products & <span>Project</span> For You
 						</h2>
 						<div class="craft__cards">
@@ -3966,7 +3973,7 @@
 			<section class="service">
 				<div class="service__container _container">
 					<div class="service__body">
-						<h2 class="service__title section-title">Choose the <span>services</span> that are right for <span>you</span></h2>
+						<h2 class="service__title section-title" data-reveal-type="">Choose the <span>services</span> that are right for <span>you</span></h2>
 						<div class="service__content">
 							<div class="service__item item-service">
 								<h4 class="item-service__title">Logistics</h4>
@@ -4093,7 +4100,7 @@
 		</footer>
 
 	</div>
-	<script src="js/app.min.js?_v=20231014223004"></script>
+	<script src="js/app.min.js?_v=20231015021538"></script>
 
 </body>
 
