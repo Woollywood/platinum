@@ -1,0 +1,190 @@
+//====================================================================================================
+
+.page {
+}
+
+.main-block {
+	@include adaptiveValue('padding-bottom', 72, 88, 0, $maxWidthContainer, 375);
+
+	&__container {
+		&:not(:last-child) {
+			margin-bottom: rem(6);
+		}
+	}
+
+	&__text-wrapper {
+	}
+
+	&__title {
+		font-family: Syne, sans-serif;
+		@include adaptiveValue('font-size', 60, 40, 0, $maxWidthContainer, 375);
+		font-weight: 700;
+		text-align: center;
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 26, 24, 0, $maxWidthContainer, 375);
+		}
+	}
+
+	&__text {
+		color: cl('grey');
+		text-align: center;
+		@include adaptiveValue('font-size', 25, 20, 0, $maxWidthContainer, 375);
+	}
+
+	&__slider {
+		position: relative;
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 0, 24, 0, 768, 375);
+		}
+	}
+
+	&__slider-pattern {
+		position: absolute;
+		height: 20%;
+		z-index: 1;
+		width: 100%;
+
+		img {
+			object-fit: cover;
+		}
+
+		&--down {
+			top: 0;
+		}
+
+		&--up {
+			bottom: 0;
+		}
+	}
+
+	&__slider-wrapper {
+	}
+
+	&__slide {
+	}
+
+	&__slide-ibg {
+		width: 100%;
+		padding-bottom: 220%;
+
+		transform: scale(0.99);
+	}
+
+	&__scroll-down {
+		position: relative;
+		z-index: 2;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		margin: 0 auto;
+		@include adaptiveValue('margin-top', -40, 0, 0, $maxWidthContainer, 375);
+
+		@include adaptiveValue('width', 176, 111, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('height', 176, 111, 0, $maxWidthContainer, 375);
+
+		img {
+			max-width: 100%;
+		}
+	}
+}
+
+.video-section {
+	position: relative;
+
+	&__background-ibg {
+		width: 100%;
+		aspect-ratio: 16 / 8;
+
+		&::before {
+			content: '';
+			position: absolute;
+			z-index: 1;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.65);
+		}
+	}
+
+	&__play {
+		position: absolute;
+		z-index: 1;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		@include adaptiveValue('width', 140, 79, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('height', 140, 79, 0, $maxWidthContainer, 375);
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+
+		svg {
+			fill: cl('white');
+		}
+	}
+}
+
+.we-do {
+	@include adaptiveValue('padding-top', 148, 122, 0, $maxWidthContainer, 375);
+
+	&__container {
+	}
+
+	&__body {
+	}
+
+	&__top {
+		@media (min-width: $mobile) {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 160, 120, 0, $maxWidthContainer, 375);
+		}
+	}
+
+	&__text-wrapper {
+	}
+
+	&__title {
+		span {
+			background-color: cl('white');
+			color: cl('background');
+		}
+
+		&:not(:last-child) {
+			@media (max-width: $mobile) {
+				margin-bottom: rem(64);
+			}
+		}
+	}
+
+	&__text {
+		@include adaptiveValue('font-size', 25, 20, 0, $maxWidthContainer, 375);
+
+		&:not(:last-child) {
+			margin-bottom: rem(32);
+		}
+	}
+
+	&__sub-title {
+		text-align: center;
+		font-family: Syne, sans-serif;
+		@include adaptiveValue('font-size', 35, 24, 0, $maxWidthContainer, 375);
+		font-weight: 700;
+		letter-spacing: 7px;
+		text-transform: uppercase;
+
+		@media (min-width: $pc) {
+			margin: 0 rem(-120);
+		}
+	}
+}
+
+//====================================================================================================
