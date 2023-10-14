@@ -642,11 +642,13 @@ h6 {
 
 .page__background-ball-wrapper {
   position: relative;
+  z-index: 5;
+  pointer-events: none;
 }
 
 .page__background-ball {
   position: fixed;
-  z-index: -1;
+  z-index: 1;
   left: calc(52.5rem * -0.8);
   width: 52.5rem;
   height: 39.25rem;
@@ -1045,6 +1047,11 @@ h6 {
 
 .item-service__link svg {
   fill: var(--color-white);
+}
+
+._data-content {
+  position: relative;
+  z-index: 5;
 }
 
 .swiper {
