@@ -10657,6 +10657,7 @@ object-assign
         },
         pinType: document.querySelector("[data-scroll-container]").style.transform ? "transform" : "fixed"
     });
+    new ResizeObserver((() => smoothScrolling.update())).observe(document.querySelector("[data-scroll-container]"));
     init();
     ScrollTrigger_ScrollTrigger.addEventListener("refresh", (() => smoothScrolling.update()));
     ScrollTrigger_ScrollTrigger.refresh();

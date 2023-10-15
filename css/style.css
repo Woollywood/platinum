@@ -206,12 +206,6 @@ textarea.input {
           box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-  min-width: 320px;
-}
-
 body {
   color: var(--color-white);
   line-height: normal;
@@ -821,6 +815,15 @@ h6 {
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.video-section__play:hover {
+  -webkit-transform: translate(-50%, -50%) scale(1.2);
+      -ms-transform: translate(-50%, -50%) scale(1.2);
+          transform: translate(-50%, -50%) scale(1.2);
 }
 
 .video-section__play svg {
@@ -979,10 +982,17 @@ h6 {
       -ms-flex-align: center;
           align-items: center;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .card-craft__view svg {
   max-width: 100%;
+}
+
+.card-craft__view:hover {
+  -webkit-transform: scale(1.2);
+      -ms-transform: scale(1.2);
+          transform: scale(1.2);
 }
 
 .service__title {
