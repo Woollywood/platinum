@@ -966,8 +966,6 @@ h6 {
   background: radial-gradient(50.11% 50.11% at 50% 49.92%, #fff 0%, #ffdaa2 7%, #ff0e00 32%, #000 79%);
   background-blend-mode: screen;
   mix-blend-mode: screen;
-  -webkit-animation: circle-pulse 1.6s ease infinite;
-          animation: circle-pulse 1.6s ease infinite;
 }
 
 .we-do__map-circle--01 {
@@ -1320,15 +1318,11 @@ h6 {
   display: grid;
   -ms-grid-columns: (1fr)[3];
   grid-template-columns: repeat(3, 1fr);
-  overflow: auto;
-}
-
-.service__item {
-  min-width: 16.125rem;
+  width: max(var(--item-width) * 3, 100%);
 }
 
 .item-service {
-  width: 100%;
+  width: max(100%, 16.125rem);
 }
 
 .item-service:hover .item-service__image-ibg .hidden {
@@ -1391,6 +1385,15 @@ h6 {
   z-index: 5;
 }
 
+[data-reveal-init] .word,
+[data-reveal-type] .word,
+[data-gsap-scale],
+[data-parallax-item],
+[data-parallax-image],
+.we-do__map-circle {
+  will-change: transform;
+}
+
 .swiper {
   overflow: hidden;
 }
@@ -1437,6 +1440,108 @@ h6 {
 
 .swiper-button-lock {
   display: none !important;
+}
+
+/*! locomotive-scroll v4.1.3 | MIT License | https://github.com/locomotivemtl/locomotive-scroll */
+
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
+}
+
+[data-scroll-direction=horizontal] [data-scroll-container] {
+  height: 100vh;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+[data-scroll-direction=horizontal] [data-scroll-section] {
+  display: inline-block;
+  vertical-align: top;
+  white-space: nowrap;
+  height: 100%;
+}
+
+.c-scrollbar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11px;
+  height: 100%;
+  -webkit-transform-origin: center right;
+      -ms-transform-origin: center right;
+          transform-origin: center right;
+  -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+  transition: opacity 0.3s, -webkit-transform 0.3s;
+  -o-transition: transform 0.3s, opacity 0.3s;
+  transition: transform 0.3s, opacity 0.3s;
+  transition: transform 0.3s, opacity 0.3s, -webkit-transform 0.3s;
+  opacity: 0;
+}
+
+.c-scrollbar:hover {
+  -webkit-transform: scaleX(1.45);
+      -ms-transform: scaleX(1.45);
+          transform: scaleX(1.45);
+}
+
+.c-scrollbar:hover,
+.has-scroll-scrolling .c-scrollbar,
+.has-scroll-dragging .c-scrollbar {
+  opacity: 1;
+}
+
+[data-scroll-direction=horizontal] .c-scrollbar {
+  width: 100%;
+  height: 10px;
+  top: auto;
+  bottom: 0;
+  -webkit-transform: scaleY(1);
+      -ms-transform: scaleY(1);
+          transform: scaleY(1);
+}
+
+[data-scroll-direction=horizontal] .c-scrollbar:hover {
+  -webkit-transform: scaleY(1.3);
+      -ms-transform: scaleY(1.3);
+          transform: scaleY(1.3);
+}
+
+.c-scrollbar_thumb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: black;
+  opacity: 0.5;
+  width: 7px;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.has-scroll-dragging .c-scrollbar_thumb {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+[data-scroll-direction=horizontal] .c-scrollbar_thumb {
+  right: auto;
+  bottom: 0;
 }
 
 @media (min-width: 29.99875em) {
@@ -1519,6 +1624,11 @@ h6 {
     display: grid;
     -ms-grid-columns: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .we-do__map-circle {
+    -webkit-animation: circle-pulse 1.6s ease infinite;
+            animation: circle-pulse 1.6s ease infinite;
   }
 }
 
@@ -1790,12 +1900,6 @@ h6 {
     -webkit-column-gap: 3.5rem;
        -moz-column-gap: 3.5rem;
             column-gap: 3.5rem;
-  }
-}
-
-@media (max-width: 118.75rem) {
-  .we-do__map-container {
-    overflow: auto;
   }
 }
 
