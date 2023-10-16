@@ -24,6 +24,8 @@ ScrollTrigger.scrollerProxy('[data-scroll-container]', {
 	pinType: document.querySelector('[data-scroll-container]').style.transform ? 'transform' : 'fixed',
 });
 
+new ResizeObserver(() => smoothScrolling.update()).observe(document.querySelector('[data-scroll-container]'));
+
 init();
 
 ScrollTrigger.addEventListener('refresh', () => smoothScrolling.update());
@@ -83,7 +85,7 @@ function splitText() {
 
 function scrollScale() {
 	const scaleBlocks = document.querySelectorAll('[data-gsap-scale]');
-	scaleBlocks.forEach(scaleBlock => {
+	scaleBlocks.forEach((scaleBlock) => {
 		gsap.from(scaleBlock, {
 			scale: 0.8,
 			scrollTrigger: {
@@ -94,5 +96,5 @@ function scrollScale() {
 				scroller: '[data-scroll-container]',
 			},
 		});
-	})
+	});
 }

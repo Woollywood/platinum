@@ -51,10 +51,11 @@ function initSliders() {
 			// Указываем класс нужного слайдера
 			// Подключаем модули слайдера
 			// для конкретного случая
+			modules: [Autoplay],
 			observer: true,
 			observeParents: true,
 			spaceBetween: 20,
-			speed: 800,
+			speed: 1600,
 			loop: true,
 			grabCursor: true,
 
@@ -78,7 +79,7 @@ function initSliders() {
 				},
 				1440: {
 					slidesPerView: 6,
-				}
+				},
 			},
 		});
 	}

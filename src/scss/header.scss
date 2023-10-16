@@ -6,7 +6,7 @@
 
 	&__body {
 		position: relative;
-		z-index: 5;
+		z-index: 9;
 
 		display: flex;
 		align-items: center;
@@ -94,35 +94,78 @@
 	&__item {
 	}
 
+	&__hover-item {
+		position: absolute;
+		height: 100%;
+		top: 0;
+		pointer-events: none;
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		transition: all 0.3s ease;
+		animation: header-item-mouse-leave 0.3s ease forwards;
+
+		._mouse-enter & {
+			animation: header-item-mouse-enter 0.3s ease forwards;
+		}
+
+		&--left {
+			left: 0;
+			transform: translateX(-100%);
+		}
+
+		&--right {
+			@media (min-width: $mobile) {
+				display: none;
+			}
+
+			right: 0;
+			transform: translateX(100%);
+		}
+	}
+
 	&__link {
+		position: relative;
 		white-space: nowrap;
 		font-size: rem(18);
 		font-weight: 500;
+		transition: all 0.3s ease;
 
 		@media (max-width: $mobile) {
 			font-size: rem(20);
-
-			&--main {
-				&::before,
-				&::after {
-					content: '-';
-				}
-
-				&::before {
-					padding-right: rem(16);
-				}
-
-				&::after {
-					padding-left: rem(16);
-				}
-			}
 		}
 
-		&--desktop {
+		&:hover {
+			padding-left: rem(38);
 			@media (max-width: $mobile) {
-				display: none;
+				padding: 0 rem(16);
 			}
 		}
+	}
+}
+
+@keyframes header-item-mouse-enter {
+	from {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	to {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+@keyframes header-item-mouse-leave {
+	from {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	to {
+		opacity: 0;
+		visibility: hidden;
 	}
 }
 
@@ -133,7 +176,7 @@
 	}
 
 	position: fixed;
-	z-index: 4;
+	z-index: 8;
 	inset: 0;
 	background-color: cl('background');
 

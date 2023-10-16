@@ -9,17 +9,10 @@
 	padding: rem(15) rem(20);
 	border-radius: rem(40);
 	background-color: cl('background');
+	transition: all 0.3s ease;
 
 	font-family: Nunito, sans-serif;
 	color: cl('white');
 	font-size: rem(14);
 	font-weight: 700;
-
-	@media (any-hover: hover) {
-		&:hover {
-		}
-	}
-	&._fw {
-		width: 100%;
-	}
 }
