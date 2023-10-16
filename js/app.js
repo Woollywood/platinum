@@ -1,38 +1,6 @@
 (() => {
     "use strict";
-    var __webpack_modules__ = {};
-    var __webpack_module_cache__ = {};
-    function __webpack_require__(moduleId) {
-        var cachedModule = __webpack_module_cache__[moduleId];
-        if (cachedModule !== void 0) return cachedModule.exports;
-        var module = __webpack_module_cache__[moduleId] = {
-            exports: {}
-        };
-        __webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-        return module.exports;
-    }
-    __webpack_require__.m = __webpack_modules__;
-    (() => {
-        __webpack_require__.d = (exports, definition) => {
-            for (var key in definition) if (__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) Object.defineProperty(exports, key, {
-                enumerable: true,
-                get: definition[key]
-            });
-        };
-    })();
-    (() => {
-        __webpack_require__.f = {};
-        __webpack_require__.e = chunkId => Promise.all(Object.keys(__webpack_require__.f).reduce(((promises, key) => {
-            __webpack_require__.f[key](chunkId, promises);
-            return promises;
-        }), []));
-    })();
-    (() => {
-        __webpack_require__.u = chunkId => chunkId + ".app.js";
-    })();
-    (() => {
-        __webpack_require__.miniCssF = chunkId => {};
-    })();
+    var __webpack_require__ = {};
     (() => {
         __webpack_require__.g = function() {
             if (typeof globalThis === "object") return globalThis;
@@ -42,116 +10,6 @@
                 if (typeof window === "object") return window;
             }
         }();
-    })();
-    (() => {
-        __webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
-    })();
-    (() => {
-        var inProgress = {};
-        var dataWebpackPrefix = "platinum:";
-        __webpack_require__.l = (url, done, key, chunkId) => {
-            if (inProgress[url]) {
-                inProgress[url].push(done);
-                return;
-            }
-            var script, needAttach;
-            if (key !== void 0) {
-                var scripts = document.getElementsByTagName("script");
-                for (var i = 0; i < scripts.length; i++) {
-                    var s = scripts[i];
-                    if (s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) {
-                        script = s;
-                        break;
-                    }
-                }
-            }
-            if (!script) {
-                needAttach = true;
-                script = document.createElement("script");
-                script.charset = "utf-8";
-                script.timeout = 120;
-                if (__webpack_require__.nc) script.setAttribute("nonce", __webpack_require__.nc);
-                script.setAttribute("data-webpack", dataWebpackPrefix + key);
-                script.src = url;
-            }
-            inProgress[url] = [ done ];
-            var onScriptComplete = (prev, event) => {
-                script.onerror = script.onload = null;
-                clearTimeout(timeout);
-                var doneFns = inProgress[url];
-                delete inProgress[url];
-                script.parentNode && script.parentNode.removeChild(script);
-                doneFns && doneFns.forEach((fn => fn(event)));
-                if (prev) return prev(event);
-            };
-            var timeout = setTimeout(onScriptComplete.bind(null, void 0, {
-                type: "timeout",
-                target: script
-            }), 12e4);
-            script.onerror = onScriptComplete.bind(null, script.onerror);
-            script.onload = onScriptComplete.bind(null, script.onload);
-            needAttach && document.head.appendChild(script);
-        };
-    })();
-    (() => {
-        __webpack_require__.r = exports => {
-            if (typeof Symbol !== "undefined" && Symbol.toStringTag) Object.defineProperty(exports, Symbol.toStringTag, {
-                value: "Module"
-            });
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-        };
-    })();
-    (() => {
-        __webpack_require__.p = "/";
-    })();
-    (() => {
-        var installedChunks = {
-            179: 0
-        };
-        __webpack_require__.f.j = (chunkId, promises) => {
-            var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : void 0;
-            if (installedChunkData !== 0) if (installedChunkData) promises.push(installedChunkData[2]); else if (true) {
-                var promise = new Promise(((resolve, reject) => installedChunkData = installedChunks[chunkId] = [ resolve, reject ]));
-                promises.push(installedChunkData[2] = promise);
-                var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-                var error = new Error;
-                var loadingEnded = event => {
-                    if (__webpack_require__.o(installedChunks, chunkId)) {
-                        installedChunkData = installedChunks[chunkId];
-                        if (installedChunkData !== 0) installedChunks[chunkId] = void 0;
-                        if (installedChunkData) {
-                            var errorType = event && (event.type === "load" ? "missing" : event.type);
-                            var realSrc = event && event.target && event.target.src;
-                            error.message = "Loading chunk " + chunkId + " failed.\n(" + errorType + ": " + realSrc + ")";
-                            error.name = "ChunkLoadError";
-                            error.type = errorType;
-                            error.request = realSrc;
-                            installedChunkData[1](error);
-                        }
-                    }
-                };
-                __webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-            }
-        };
-        var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-            var [chunkIds, moreModules, runtime] = data;
-            var moduleId, chunkId, i = 0;
-            if (chunkIds.some((id => installedChunks[id] !== 0))) {
-                for (moduleId in moreModules) if (__webpack_require__.o(moreModules, moduleId)) __webpack_require__.m[moduleId] = moreModules[moduleId];
-                if (runtime) runtime(__webpack_require__);
-            }
-            if (parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-            for (;i < chunkIds.length; i++) {
-                chunkId = chunkIds[i];
-                if (__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) installedChunks[chunkId][0]();
-                installedChunks[chunkId] = 0;
-            }
-        };
-        var chunkLoadingGlobal = self["webpackChunkplatinum"] = self["webpackChunkplatinum"] || [];
-        chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-        chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
     })();
     function isWebp() {
         function testWebP(callback) {
@@ -8135,6 +7993,8 @@ object-assign
     ScrollTrigger_ScrollTrigger.addEventListener("refresh", (() => smoothScrolling.update()));
     ScrollTrigger_ScrollTrigger.refresh();
     function init() {
+        serviceItems();
+        window.addEventListener("resize", serviceItems);
         scrollSlider();
         splitTextInit();
         splitText();
@@ -8357,6 +8217,12 @@ object-assign
             }
         });
     }
+    function serviceItems() {
+        const container = document.querySelector(".service__content");
+        const items = container.querySelectorAll(".service__item");
+        let width = Math.max(...Array.from(items).map((item => item.getBoundingClientRect().width)));
+        container.style.cssText += `--item-width: ${width}px`;
+    }
     class DynamicAdapt {
         constructor(type) {
             this.type = type;
@@ -8441,7 +8307,6 @@ object-assign
     }
     const da = new DynamicAdapt("max");
     da.init();
-    __webpack_require__.e(541).then(__webpack_require__.bind(__webpack_require__, 541));
     class Slider {
         constructor(element, options) {
             this._slider = element;
@@ -8524,15 +8389,11 @@ object-assign
             },
             plugins: [ SliderAnimation ]
         });
-    }));
-    document.addEventListener("DOMContentLoaded", (event => {
         headerMenuItemHover();
         headerHeight();
         window.addEventListener("resize", headerHeight);
         floatingBallsInitStyle();
         window.addEventListener("resize", floatingBallsInitStyle);
-        serviceItems();
-        window.addEventListener("resize", serviceItems);
     }));
     function headerHeight() {
         const header = document.querySelector(".header");
@@ -8562,12 +8423,6 @@ object-assign
                 e.target.classList.add("_mouse-leave");
             }));
         }));
-    }
-    function serviceItems() {
-        const container = document.querySelector(".service__content");
-        const items = container.querySelectorAll(".service__item");
-        let width = Math.max(...Array.from(items).map((item => item.getBoundingClientRect().width)));
-        container.style.cssText += `--item-width: ${width}px`;
     }
     window["FLS"] = true;
     isWebp();
