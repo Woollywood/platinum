@@ -1137,13 +1137,13 @@ h6 {
 
 @-webkit-keyframes circle-pulse {
   from {
-    -webkit-transform: scale(0.6);
-            transform: scale(0.6);
+    -webkit-transform: scale(0.4);
+            transform: scale(0.4);
   }
 
   50% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+    -webkit-transform: scale(0.7);
+            transform: scale(0.7);
   }
 
   to {
@@ -1154,13 +1154,13 @@ h6 {
 
 @keyframes circle-pulse {
   from {
-    -webkit-transform: scale(0.6);
-            transform: scale(0.6);
+    -webkit-transform: scale(0.4);
+            transform: scale(0.4);
   }
 
   50% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
+    -webkit-transform: scale(0.7);
+            transform: scale(0.7);
   }
 
   to {
