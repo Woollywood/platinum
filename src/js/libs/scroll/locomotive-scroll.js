@@ -32,9 +32,11 @@ ScrollTrigger.addEventListener('refresh', () => smoothScrolling.update());
 ScrollTrigger.refresh();
 
 function init() {
+	parallax();
 	splitTextInit();
 	splitText();
 	scrollScale();
+	gsapFromTimeline();
 }
 
 function splitTextInit() {
@@ -44,7 +46,7 @@ function splitTextInit() {
 			types: 'chars, words',
 		});
 
-		gsap.from(text.chars, {
+		gsap.from(text.words, {
 			y: 100,
 			opacity: 0,
 			stagger: 0.06,
@@ -67,7 +69,7 @@ function splitText() {
 			types: 'chars, words',
 		});
 
-		gsap.from(text.chars, {
+		gsap.from(text.words, {
 			y: 100,
 			opacity: 0,
 			stagger: 0.1,
@@ -77,7 +79,6 @@ function splitText() {
 				start: 'top 80%',
 				end: 'top 20%',
 				scroller: '[data-scroll-container]',
-				scrub: true,
 			},
 		});
 	});
@@ -92,9 +93,86 @@ function scrollScale() {
 				trigger: scaleBlock,
 				start: 'top 70%',
 				end: 'top 50%',
-				scrub: true,
 				scroller: '[data-scroll-container]',
 			},
 		});
+	});
+}
+
+function gsapFromTimeline() {
+	const gsapTimelineItems = document.querySelectorAll('[data-timeline]');
+	gsapTimelineItems.forEach((timelineItem) => {
+		const gsapItems = timelineItem.querySelectorAll('[data-timeline-from]');
+		if (gsapItems) {
+			const timeline = gsap.timeline();
+			gsapItems.forEach((item) => {
+				const direction = item.dataset.timelineFrom;
+				switch (direction) {
+					case 'right':
+						timeline.from(item, {
+							opacity: 0,
+							xPercent: 60,
+						});
+						break;
+					case 'left':
+						timeline.from(item, {
+							opacity: 0,
+							xPercent: -60,
+						});
+						break;
+					default:
+						throw new Error('unknown direction');
+				}
+			});
+
+			ScrollTrigger.create({
+				trigger: timelineItem,
+				start: 'top 70%',
+				end: 'top 50%',
+				scroller: '[data-scroll-container]',
+				animation: timeline,
+			});
+		}
+	});
+}
+
+function gsapFrom() {
+	const gsapItems = document.querySelectorAll('[data-from]');
+	gsapItems.forEach((item) => {
+		console.log(item);
+
+		gsap.from(item, {
+			opacity: 0,
+			xPercent: 60,
+			duration: 1,
+			scrollTrigger: {
+				trigger: item,
+				start: 'top 70%',
+				end: 'top 50%',
+				scroller: '[data-scroll-container]',
+			},
+		});
+	});
+}
+
+
+function parallaxsImages() {
+	const items = document.querySelectorAll('[data-parallax-item]');
+	items.forEach((item) => {
+		const image = item.querySelector('[data-parallax-image]');
+		image && parallaxImage(item, image);
+	});
+}
+
+function parallaxImage(item, image) {
+	gsap.from(image, {
+		scale: 0.8,
+		scrollTrigger: {
+			trigger: item,
+			start: 'top 50%',
+			end: 'top 20%',
+			scroller: '[data-scroll-container]',
+			scrub: true,
+		},
 	});
 }

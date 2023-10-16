@@ -2,27 +2,27 @@
 <html lang="en">
 	@@include('html/_head.htm',{ "title":"HomePage" })
 	<body>
-		<div class="wrapper" id="wrapper">
+		<div class="wrapper" id="wrapper" data-scroll-container>
 			@@include('html/_header.htm',{})
 			<main class="page">
-				<div class="page__background-ball-wrapper">
-					<div class="page__background-ball" data-background-ball></div>
-					<div class="page__background-ball page__background-ball--reverse" data-background-ball></div>
+				<div class="page__background-ball-wrapper" data-scroll data-scroll-sticky data-scroll-target="#wrapper">
+					<div class="page__background-ball page__background-ball--first" data-background-ball></div>
+					<div class="page__background-ball page__background-ball--second page__background-ball--reverse" data-background-ball></div>
 				</div>
 
 				<section class="main-block">
 					<div class="main-block__container _container _data-content">
 						<div class="main-block__text-wrapper">
-							<h1 class="main-block__title" data-reveal-init>
+							<h1 class="main-block__title" data-reveal-init data-from-init="left">
 								Take your exhibition services to the next level
 							</h1>
-							<p class="main-block__text" data-reveal-init>
+							<p class="main-block__text" data-reveal-init data-from-init="right">
 								We provide services of organizing exhibitions. We make participation in the exhibition
 								as comfortable as possible.
 							</p>
 						</div>
 					</div>
-					<div class="main-block__slider">
+					<div class="main-block__slider" data-slider>
 						<div
 							class="main-block__slider-pattern main-block__slider-pattern-ibg main-block__slider-pattern--down">
 							<img src="@img/main-slider/pattern-down.svg" alt="" />
@@ -31,63 +31,63 @@
 							class="main-block__slider-pattern main-block__slider-pattern-ibg main-block__slider-pattern--up">
 							<img src="@img/main-slider/pattern-up.svg" alt="" />
 						</div>
-						<div class="main-block__slider-wrapper main-block__swiper">
-							<div class="main-block__slide">
+						<div class="main-block__slider-wrapper" data-slider-wrapper>
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-01.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-02.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-03.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-04.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-05.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-06.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-01.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-02.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-03.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-04.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-05.jpg" alt="slide" />
 								</div>
 							</div>
-							<div class="main-block__slide">
+							<div class="main-block__slide" data-slide>
 								<div class="main-block__slide-ibg">
 									<img src="@img/main-slider/slide-06.jpg" alt="slide" />
 								</div>
@@ -200,7 +200,9 @@
 					<div class="we-do__container _container">
 						<div class="we-do__body">
 							<div class="we-do__top">
-								<h2 class="we-do__title section-title" data-reveal-type>What<span> we do?</span></h2>
+								<h2 class="we-do__title section-title" data-reveal-type data-from="left">
+									What<span> we do?</span>
+								</h2>
 								<div class="we-do__text-wrapper" data-timeline>
 									<p class="we-do__text" data-timeline-from="right">
 										Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
@@ -213,13 +215,13 @@
 									</p>
 								</div>
 							</div>
-							<h3 class="we-do__sub-title" data-reveal-type>
+							<h3 class="we-do__sub-title" data-reveal-type data-from="left">
 								We can fulfill the order all over the world
 							</h3>
 						</div>
 					</div>
-					<div class="we-do__map-container">
-						<div class="we-do__map">
+					<div class="we-do__map-container" data-scroll-slider-container>
+						<div class="we-do__map" data-scroll-slider>
 							<img src="@img/we-do/earth.svg" alt="earth" />
 							<svg
 								class="we-do__map-circle we-do__map-circle--01"
@@ -623,14 +625,18 @@
 				<section class="craft _data-content">
 					<div class="craft__container _container">
 						<div class="craft__body">
-							<h2 class="craft__title section-title" data-reveal-type="">
+							<h2 class="craft__title section-title" data-reveal-type data-from="right">
 								We Work to Craft Solid Products & <span>Project</span> For You
 							</h2>
-							<div class="craft__cards">
+							<div class="craft__cards" data-parallax-container>
 								<div class="craft__cards-left">
-									<div class="craft__card card-craft" data-parallax-item>
-										<div class="card-craft__image-ibg">
-											<img src="@img/craft/01.jpg" alt="card" data-parallax-image />
+									<div
+										class="craft__card card-craft"
+										data-parallax-item
+										data-scroll
+										data-scroll-speed="1">
+										<div class="card-craft__image-ibg" data-parallax-image>
+											<img src="@img/craft/01.jpg" alt="card" />
 										</div>
 										<div class="card-craft__text-wrapper">
 											<h4 class="card-craft__title">Mascot game</h4>
@@ -693,9 +699,13 @@
 											</svg>
 										</a>
 									</div>
-									<div class="craft__card card-craft" data-parallax-item>
-										<div class="card-craft__image-ibg">
-											<img src="@img/craft/02.jpg" alt="card" data-parallax-image/>
+									<div
+										class="craft__card card-craft"
+										data-parallax-item
+										data-scroll
+										data-scroll-speed="1.4">
+										<div class="card-craft__image-ibg" data-parallax-image>
+											<img src="@img/craft/02.jpg" alt="card" />
 										</div>
 										<div class="card-craft__text-wrapper">
 											<h4 class="card-craft__title">Mascot game</h4>
@@ -758,9 +768,13 @@
 											</svg>
 										</a>
 									</div>
-									<div class="craft__card card-craft" data-parallax-item>
-										<div class="card-craft__image-ibg">
-											<img src="@img/craft/03.jpg" alt="card" data-parallax-image/>
+									<div
+										class="craft__card card-craft"
+										data-parallax-item
+										data-scroll
+										data-scroll-speed="1.8">
+										<div class="card-craft__image-ibg" data-parallax-image>
+											<img src="@img/craft/03.jpg" alt="card" />
 										</div>
 										<div class="card-craft__text-wrapper">
 											<h4 class="card-craft__title">Mascot game</h4>
@@ -825,9 +839,13 @@
 									</div>
 								</div>
 								<div class="craft__cards-right">
-									<div class="craft__card card-craft" data-parallax-item>
-										<div class="card-craft__image-ibg">
-											<img src="@img/craft/04.jpg" alt="card" data-parallax-image/>
+									<div
+										class="craft__card card-craft"
+										data-parallax-item
+										data-scroll
+										data-scroll-speed="4">
+										<div class="card-craft__image-ibg" data-parallax-image>
+											<img src="@img/craft/04.jpg" alt="card" />
 										</div>
 										<div class="card-craft__text-wrapper">
 											<h4 class="card-craft__title">Mascot game</h4>
@@ -890,9 +908,13 @@
 											</svg>
 										</a>
 									</div>
-									<div class="craft__card card-craft" data-parallax-item>
-										<div class="card-craft__image-ibg">
-											<img src="@img/craft/05.jpg" alt="card" data-parallax-image/>
+									<div
+										class="craft__card card-craft"
+										data-parallax-item
+										data-scroll
+										data-scroll-speed="5.8">
+										<div class="card-craft__image-ibg" data-parallax-image>
+											<img src="@img/craft/05.jpg" alt="card" />
 										</div>
 										<div class="card-craft__text-wrapper">
 											<h4 class="card-craft__title">Mascot game</h4>
@@ -955,7 +977,11 @@
 											</svg>
 										</a>
 									</div>
-									<div class="craft__cards-more-wrapper">
+									<div
+										class="craft__cards-more-wrapper"
+										data-parallax-item
+										data-scroll
+										data-scroll-speed="6.6">
 										<a class="craft__cards-more-button" href="#">
 											<div class="craft__cards-more-button-inner">
 												<div class="craft__cards-more-text">
@@ -975,11 +1001,11 @@
 				</section>
 				<section class="service _data-content">
 					<div class="service__container _container">
-						<div class="service__body">
-							<h2 class="service__title section-title" data-reveal-type="">
+						<div class="service__body" data-scroll-slider-container>
+							<h2 class="service__title section-title" data-reveal-type data-from="left">
 								Choose the <span>services</span> that are right for <span>you</span>
 							</h2>
-							<div class="service__content">
+							<div class="service__content" data-scroll-slider="+=44">
 								<div class="service__item item-service">
 									<h4 class="item-service__title">Logistics</h4>
 									<div class="item-service__image-ibg">

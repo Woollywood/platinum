@@ -27,6 +27,10 @@
 		@media (max-width: $mobile) {
 			width: rem(616);
 			height: rem(460);
+
+			&--second {
+				display: none;
+			}
 		}
 
 		&::before {
@@ -139,16 +143,20 @@
 	}
 
 	&__slider-wrapper {
+		display: flex;
 	}
 
 	&__slide {
+		flex-shrink: 0;
+		flex-grow: 1;
+		flex-basis: auto;
 	}
 
 	&__slide-ibg {
 		width: 100%;
 		padding-bottom: 220%;
 
-		transform: scale(0.99);
+		transform: scale(0.98);
 	}
 
 	&__scroll-down {
@@ -284,10 +292,6 @@
 	}
 
 	&__map-container {
-		@media (max-width: rem(1900)) {
-			overflow: auto;
-		}
-
 		&::-webkit-scrollbar {
 			width: rem(8);
 		}
@@ -332,7 +336,9 @@
 		background: radial-gradient(50.11% 50.11% at 50% 49.92%, #fff 0%, #ffdaa2 7%, #ff0e00 32%, #000 79%);
 		background-blend-mode: screen;
 		mix-blend-mode: screen;
-		animation: circle-pulse 1.6s ease infinite;
+		@media (min-width: $mobile) {
+			animation: circle-pulse 1.6s ease infinite;
+		}
 
 		&--01 {
 			top: 13%;
@@ -503,11 +509,11 @@
 
 @keyframes circle-pulse {
 	from {
-		transform: scale(0.6);
+		transform: scale(0.4);
 	}
 
 	50% {
-		transform: scale(1);
+		transform: scale(0.7);
 	}
 
 	to {
@@ -733,18 +739,16 @@
 	&__content {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		width: max(calc(var(--item-width) * 3), 100%);
 		@include adaptiveValue('gap', 28, 16, 0, $maxWidthContainer, 375);
-
-		overflow: auto;
 	}
 
 	&__item {
-		min-width: rem(258);
 	}
 }
 
 .item-service {
-	width: 100%;
+	width: max(100%, rem(258));
 
 	&:hover {
 		.item-service__image-ibg {
@@ -824,6 +828,15 @@
 ._data-content {
 	position: relative;
 	z-index: 5;
+}
+
+[data-reveal-init] .word,
+[data-reveal-type] .word,
+[data-gsap-scale],
+[data-parallax-item],
+[data-parallax-image],
+.we-do__map-circle {
+	will-change: transform;
 }
 
 //====================================================================================================

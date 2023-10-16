@@ -6,6 +6,124 @@ import { flsModules } from './modules.js';
 
 import { gsap } from 'gsap/all.js';
 
+class Slider {
+	constructor(element, options) {
+		this._slider = element;
+		this._sliderWrapper = element.querySelector('[data-slider-wrapper]');
+		this._slides = element.querySelectorAll('[data-slide]');
+		this._options = options;
+
+		this._init();
+		this._initPlugins();
+	}
+
+	_init() {
+		this._spaceBetween = this._options.spaceBetween;
+
+		this._breakpointsInit();
+
+		this._readBreakpoints();
+		window.addEventListener('resize', this._readBreakpoints.bind(this));
+	}
+
+	_initPlugins() {
+		if (!this._options.plugins) {
+			return;
+		}
+
+		console.log('init plugins...');
+
+		this._plugins = new Map();
+		for (const plugin of this._options.plugins) {
+			this._plugins.set(plugin.name, new plugin(this));
+		}
+	}
+
+	_breakpointsInit() {
+		if (this._options.breakpoints) {
+			this._breakpointsOption = new Map(Object.entries(this._options.breakpoints));
+		}
+	}
+
+	_readBreakpoints() {
+		for (const [breakpoint, option] of Object.entries(this._options.breakpoints).reverse()) {
+			if (window.innerWidth >= breakpoint) {
+				this._slidesPerView = option.slidesPerView;
+				break;
+			}
+		}
+
+		this._getSlidesWidth();
+	}
+
+	_getSlidesWidth() {
+		console.log(this._slider);
+		const sliderWidth = this._slider.getBoundingClientRect().width;
+		const sliderWidthWithNoGap = sliderWidth - (this._slidesPerView - 1) * this._spaceBetween;
+
+		const slideWidth = sliderWidthWithNoGap / this._slidesPerView;
+		this._slideWidth = slideWidth;
+
+		this._slides.forEach((slide, index) => {
+			slide.style.width = `${slideWidth}px`;
+
+			if (index < this._slides.length - 1) {
+				slide.style.marginRight = `${this._spaceBetween}px`;
+			}
+		});
+	}
+}
+
+class SliderAnimation {
+	constructor(sliderInstance) {
+		this._sliderInstance = sliderInstance;
+		this._init();
+	}
+
+	_init() {
+		this._animationTimeline = gsap.timeline({ repeat: -1, repeatDelay: 2, yoyo: true });
+
+		const slides = this._sliderInstance._slides;
+		const fullWidth = Array.from(slides).reduce(
+			(result, slide, index) =>
+				(result +=
+					slide.getBoundingClientRect().width +
+					(index < slides.length - 1 ? this._sliderInstance._spaceBetween : 0)),
+			0
+		);
+		const amountTranslate = fullWidth - window.innerWidth;
+
+		const animation = {
+			x: -amountTranslate,
+			duration: 3 * this._sliderInstance._slides.length,
+			ease: 'none',
+		};
+
+		this._animationTimeline.to(this._sliderInstance._sliderWrapper, animation);
+	}
+}
+
+window.addEventListener('load', (event) => {
+	const slider = new Slider(document.querySelector('.main-block__slider'), {
+		spaceBetween: 20,
+		breakpoints: {
+			320: {
+				slidesPerView: 2,
+			},
+			479: {
+				slidesPerView: 4,
+			},
+			789: {
+				slidesPerView: 4,
+			},
+			1280: {
+				slidesPerView: 6,
+			},
+		},
+		plugins: [SliderAnimation],
+	});
+});
+
 document.addEventListener('DOMContentLoaded', (event) => {
 	headerMenuItemHover();
 
@@ -14,6 +132,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 	floatingBallsInitStyle();
 	window.addEventListener('resize', floatingBallsInitStyle);
+
+	serviceItems();
+	window.addEventListener('resize', serviceItems);
 });
 
 function headerHeight() {
@@ -51,4 +172,11 @@ function headerMenuItemHover() {
 			e.target.classList.add('_mouse-leave');
 		});
 	});
+}
+
+function serviceItems() {
+	const container = document.querySelector('.service__content');
+	const items = container.querySelectorAll('.service__item');
+	let width = Math.max(...Array.from(items).map((item) => item.getBoundingClientRect().width));
+	container.style.cssText += `--item-width: ${width}px`;
 }
