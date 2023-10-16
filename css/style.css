@@ -1944,6 +1944,10 @@ html.has-scroll-dragging {
     height: 28.75rem;
   }
 
+  .page__background-ball--second {
+    display: none;
+  }
+
 @-webkit-keyframes floating-ball {
     from {
       -webkit-transform: translateX(calc(var(--window-height) * -0.6)) rotate(0);
