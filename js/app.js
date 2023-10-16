@@ -2939,7 +2939,7 @@
             observer: true,
             observeParents: true,
             spaceBetween: 20,
-            speed: 800,
+            speed: 1600,
             loop: true,
             grabCursor: true,
             autoplay: {
