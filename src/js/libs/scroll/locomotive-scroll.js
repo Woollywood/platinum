@@ -26,7 +26,10 @@ ScrollTrigger.scrollerProxy('[data-scroll-container]', {
 
 new ResizeObserver(() => smoothScrolling.update()).observe(document.querySelector('[data-scroll-container]'));
 
-init();
+window.addEventListener('load', event => {
+
+	init();
+})
 
 ScrollTrigger.addEventListener('refresh', () => smoothScrolling.update());
 ScrollTrigger.refresh();

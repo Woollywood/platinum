@@ -4,7 +4,7 @@ import { isMobile } from './functions.js';
 // Подключение списка активных модулей
 import { flsModules } from './modules.js';
 
-import { gsap } from 'gsap/all.js';
+import { gsap, TimelineLite } from 'gsap/all.js';
 
 class Slider {
 	constructor(element, options) {
@@ -31,8 +31,6 @@ class Slider {
 			return;
 		}
 
-		console.log('init plugins...');
-
 		this._plugins = new Map();
 		for (const plugin of this._options.plugins) {
 			this._plugins.set(plugin.name, new plugin(this));
@@ -57,7 +55,6 @@ class Slider {
 	}
 
 	_getSlidesWidth() {
-		console.log(this._slider);
 		const sliderWidth = this._slider.getBoundingClientRect().width;
 		const sliderWidthWithNoGap = sliderWidth - (this._slidesPerView - 1) * this._spaceBetween;
 
@@ -122,9 +119,7 @@ window.addEventListener('load', (event) => {
 		},
 		plugins: [SliderAnimation],
 	});
-});
 
-document.addEventListener('DOMContentLoaded', (event) => {
 	headerMenuItemHover();
 
 	headerHeight();
@@ -132,9 +127,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 	floatingBallsInitStyle();
 	window.addEventListener('resize', floatingBallsInitStyle);
-
-	serviceItems();
-	window.addEventListener('resize', serviceItems);
 });
 
 function headerHeight() {
@@ -172,11 +164,4 @@ function headerMenuItemHover() {
 			e.target.classList.add('_mouse-leave');
 		});
 	});
-}
-
-function serviceItems() {
-	const container = document.querySelector('.service__content');
-	const items = container.querySelectorAll('.service__item');
-	let width = Math.max(...Array.from(items).map((item) => item.getBoundingClientRect().width));
-	container.style.cssText += `--item-width: ${width}px`;
 }

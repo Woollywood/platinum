@@ -34,6 +34,9 @@ ScrollTrigger.addEventListener('refresh', () => smoothScrolling.update());
 ScrollTrigger.refresh();
 
 function init() {
+	serviceItems();
+	window.addEventListener('resize', serviceItems);
+
 	scrollSlider();
 
 	splitTextInit();
@@ -236,8 +239,6 @@ function scrollSlider() {
 			(dataValue.includes('+=') ? +dataValue.slice(dataValue.indexOf('=') + 1, dataValue.length) : 0) -
 			window.innerWidth;
 
-		console.log(sliderWidth);
-
 		const tween = gsap.to(scrollSlider, {
 			x: -amountToScroll,
 			duration: 3,
@@ -277,148 +278,9 @@ function parallaxImage(item, image) {
 	});
 }
 
-// import { gsap, ScrollTrigger } from 'gsap/all.js';
-// import SplitType from 'split-type';
-
-// gsap.registerPlugin(ScrollTrigger);
-
-// init();
-
-// function init() {
-// 	parallaxsImages();
-// 	splitTextInit();
-// 	splitText();
-// 	scrollScale();
-// 	gsapFromTimeline();
-// }
-
-// function splitTextInit() {
-// 	const splitTypes = document.querySelectorAll('[data-reveal-init]');
-// 	splitTypes.forEach((char, i) => {
-// 		const text = new SplitType(char, {
-// 			types: 'chars, words',
-// 		});
-
-// 		gsap.from(text.words, {
-// 			y: 100,
-// 			opacity: 0,
-// 			stagger: 0.06,
-// 			duration: 0.1,
-
-// 			scrollTrigger: {
-// 				trigger: char,
-// 				start: 'top 80%',
-// 				end: 'top 20%',
-// 			},
-// 		});
-// 	});
-// }
-
-// function splitText() {
-// 	const splitTypes = document.querySelectorAll('[data-reveal-type]');
-// 	splitTypes.forEach((char, i) => {
-// 		const text = new SplitType(char, {
-// 			types: 'chars, words',
-// 		});
-
-// 		gsap.from(text.words, {
-// 			y: 100,
-// 			opacity: 0,
-// 			stagger: 0.1,
-
-// 			scrollTrigger: {
-// 				trigger: char,
-// 				start: 'top 80%',
-// 				end: 'top 20%',
-// 			},
-// 		});
-// 	});
-// }
-
-// function scrollScale() {
-// 	const scaleBlocks = document.querySelectorAll('[data-gsap-scale]');
-// 	scaleBlocks.forEach((scaleBlock) => {
-// 		gsap.from(scaleBlock, {
-// 			scale: 0.8,
-// 			scrollTrigger: {
-// 				trigger: scaleBlock,
-// 				start: 'top 70%',
-// 				end: 'top 50%',
-// 			},
-// 		});
-// 	});
-// }
-
-// function gsapFromTimeline() {
-// 	const gsapTimelineItems = document.querySelectorAll('[data-timeline]');
-// 	gsapTimelineItems.forEach((timelineItem) => {
-// 		const gsapItems = timelineItem.querySelectorAll('[data-timeline-from]');
-// 		if (gsapItems) {
-// 			const timeline = gsap.timeline();
-// 			gsapItems.forEach((item) => {
-// 				const direction = item.dataset.timelineFrom;
-// 				switch (direction) {
-// 					case 'right':
-// 						timeline.from(item, {
-// 							opacity: 0,
-// 							xPercent: 60,
-// 						});
-// 						break;
-// 					case 'left':
-// 						timeline.from(item, {
-// 							opacity: 0,
-// 							xPercent: -60,
-// 						});
-// 						break;
-// 					default:
-// 						throw new Error('unknown direction');
-// 				}
-// 			});
-
-// 			ScrollTrigger.create({
-// 				trigger: timelineItem,
-// 				start: 'top 70%',
-// 				end: 'top 50%',
-// 				animation: timeline,
-// 			});
-// 		}
-// 	});
-// }
-
-// function gsapFrom() {
-// 	const gsapItems = document.querySelectorAll('[data-from]');
-// 	gsapItems.forEach((item) => {
-// 		console.log(item);
-
-// 		gsap.from(item, {
-// 			opacity: 0,
-// 			xPercent: 60,
-// 			duration: 1,
-// 			scrollTrigger: {
-// 				trigger: item,
-// 				start: 'top 70%',
-// 				end: 'top 50%',
-// 			},
-// 		});
-// 	});
-// }
-
-// function parallaxsImages() {
-// 	const items = document.querySelectorAll('[data-parallax-item]');
-// 	items.forEach((item) => {
-// 		const image = item.querySelector('[data-parallax-image]');
-// 		image && parallaxImage(item, image);
-// 	});
-// }
-
-// function parallaxImage(item, image) {
-// 	gsap.from(image, {
-// 		scale: 0.8,
-// 		scrollTrigger: {
-// 			trigger: item,
-// 			start: 'top 50%',
-// 			end: 'top 20%',
-// 			scrub: true,
-// 		},
-// 	});
-// }
+function serviceItems() {
+	const container = document.querySelector('.service__content');
+	const items = container.querySelectorAll('.service__item');
+	let width = Math.max(...Array.from(items).map((item) => item.getBoundingClientRect().width));
+	container.style.cssText += `--item-width: ${width}px`;
+}
