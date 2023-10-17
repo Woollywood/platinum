@@ -1211,35 +1211,35 @@ h6 {
 
 @-webkit-keyframes circle-pulse {
   from {
-    -webkit-transform: scale(0.4);
-            transform: scale(0.4);
+    -webkit-transform: scale(0.2);
+            transform: scale(0.2);
   }
 
   50% {
-    -webkit-transform: scale(0.7);
-            transform: scale(0.7);
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
   }
 
   to {
-    -webkit-transform: scale(0.6);
-            transform: scale(0.6);
+    -webkit-transform: scale(0.2);
+            transform: scale(0.2);
   }
 }
 
 @keyframes circle-pulse {
   from {
-    -webkit-transform: scale(0.4);
-            transform: scale(0.4);
+    -webkit-transform: scale(0.2);
+            transform: scale(0.2);
   }
 
   50% {
-    -webkit-transform: scale(0.7);
-            transform: scale(0.7);
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
   }
 
   to {
-    -webkit-transform: scale(0.6);
-            transform: scale(0.6);
+    -webkit-transform: scale(0.2);
+            transform: scale(0.2);
   }
 }
 
