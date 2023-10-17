@@ -566,15 +566,15 @@
 
 @keyframes circle-pulse {
 	from {
-		transform: scale(0.4);
+		transform: scale(0.2);
 	}
 
 	50% {
-		transform: scale(0.7);
+		transform: scale(0.5);
 	}
 
 	to {
-		transform: scale(0.6);
+		transform: scale(0.2);
 	}
 }
 

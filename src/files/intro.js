@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	intro();
 });
 
-function intro() {
+async function intro() {
+	const gsapScript = await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
+
 	const wrapper = document.querySelector('.wrapper');
 	const intro = document.querySelector('.intro');
 	const logo = document.querySelector('.intro__logo');
 	const mask = document.querySelector('.intro__mask');
-	const maskImg = document.querySelector('.intro__mask > img');
+	const maskImg = document.querySelector('.intro__mask-img');
 
 	if (!document.documentElement.classList.contains('has-scroll-smooth')) {
 		bodyLockToggle();
@@ -69,9 +71,21 @@ function intro() {
 				if (!document.documentElement.classList.contains('has-scroll-smooth')) {
 					bodyLockToggle();
 				}
+
+				gsapScript.remove();
 			},
 		});
 	}
+}
+
+function loadScript(src) {
+	return new Promise((resolve, reject) => {
+		const script = document.createElement('script');
+		script.src = src;
+		script.onload = () => resolve(script);
+		script.onerror = () => reject(new Error('cannot load script'));
+		document.querySelector('head').append(script);
+	});
 }
 
 let bodyLockStatus = true;
