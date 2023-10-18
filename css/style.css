@@ -1467,7 +1467,8 @@ h6 {
 [data-parallax-item],
 [data-parallax-image],
 .we-do__map-circle,
-[data-scroll-slider] {
+[data-scroll-slider],
+[data-slider-wrapper] {
   will-change: transform;
 }
 
