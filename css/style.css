@@ -1466,7 +1466,8 @@ h6 {
 [data-gsap-scale],
 [data-parallax-item],
 [data-parallax-image],
-.we-do__map-circle {
+.we-do__map-circle,
+[data-scroll-slider] {
   will-change: transform;
 }
 
