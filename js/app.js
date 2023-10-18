@@ -1,5 +1,8 @@
 gsap.registerPlugin(ScrollTrigger);
 
+isWebp();
+menuInit();
+
 class Slider {
 	constructor(element, options) {
 		this._slider = element;
