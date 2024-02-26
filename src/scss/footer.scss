@@ -5,7 +5,7 @@
 
 	&__star {
 		position: absolute;
-		
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -76,7 +76,8 @@
 	}
 
 	&__top {
-		padding: rem(142) 0 rem(48);
+		@include adaptiveValue('padding-top', 30, 24, 0, 1920, 375);
+		@include adaptiveValue('padding-bottom', 48, 36, 0, 1920, 375);
 	}
 
 	&__body {
@@ -277,7 +278,7 @@
 
 	&__bottom {
 		padding: rem(20) 0 rem(26);
-		
+
 		@media (min-width: $mobile) {
 			border-top: 1px solid cl('border');
 		}

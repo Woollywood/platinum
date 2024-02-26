@@ -220,6 +220,7 @@
 
 .craft {
 	padding-bottom: rem(124);
+	background: radial-gradient(#5f958f, #15253d) !important;
 
 	&__container {
 	}
@@ -410,6 +411,7 @@
 
 .service {
 	padding-top: rem(140);
+	background: radial-gradient(#5f958f, #15253d) !important;
 
 	&__container {
 	}
@@ -560,6 +562,12 @@
 .what-we-do {
 	&:not(:last-child) {
 		margin-bottom: rem(62);
+	}
+
+	&--why-me {
+		@include adaptiveValue('padding-top', 80, 36, 0, 1920, 375);
+		@include adaptiveValue('padding-bottom', 50, 24, 0, 1920, 375);
+		margin-bottom: 0;
 	}
 
 	&__container {
@@ -811,6 +819,7 @@
 
 .team {
 	padding: rem(155) 0 rem(120);
+	background: radial-gradient(#5f958f, #15253d) !important;
 
 	&__container {
 	}
