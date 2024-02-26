@@ -9,19 +9,23 @@
 }
 
 .section-title-wrapper {
-	position: relative;
 	background: radial-gradient(#5f958f, #15253d) !important;
-	padding: rem(124) 0;
+	@include adaptiveValue('padding-top', 124, 48, 0, $maxWidthContainer, 375);
+	@include adaptiveValue('padding-bottom', 124, 48, 0, $maxWidthContainer, 375);
 	margin: rem(-2) 0;
 
+	&__inner {
+		position: relative;
+	}
+
 	&__container {
-		padding-top: rem(32);
-		padding-bottom: rem(44);
+		@include adaptiveValue('padding-top', 32, 16, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('padding-bottom', 44, 24, 0, $maxWidthContainer, 375);
 		position: relative;
 
 		.title-hidden {
 			font-family: Wadik, sans-serif;
-			font-size: rem(117);
+			@include adaptiveValue('font-size', 117, 48, 0, $maxWidthContainer, 375);
 			font-weight: 700;
 			line-height: normal;
 			text-transform: uppercase;
@@ -64,7 +68,7 @@
 	transform: translate(-50%, -50%);
 
 	font-family: Wadik, sans-serif;
-	font-size: rem(117);
+	@include adaptiveValue('font-size', 117, 48, 0, $maxWidthContainer, 375);
 	font-weight: 700;
 	line-height: normal;
 	text-transform: uppercase;

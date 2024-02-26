@@ -13,7 +13,8 @@
 		justify-content: space-between;
 		gap: rem(32);
 
-		padding: rem(62) 0 rem(40);
+		@include adaptiveValue('padding-top', 62, 24, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('padding-bottom', 40, 18, 0, $maxWidthContainer, 375);
 		border-bottom: rem(1) solid cl('border');
 	}
 
@@ -61,6 +62,8 @@
 		}
 
 		.open {
+			fill: black;
+
 			.menu-open & {
 				display: none;
 			}
@@ -130,7 +133,7 @@
 		font-size: rem(18);
 		font-weight: 500;
 		transition: all 0.3s ease;
-		color: cl('background');
+		color: cl('white');
 
 		@media (max-width: $mobile) {
 			font-size: rem(20);

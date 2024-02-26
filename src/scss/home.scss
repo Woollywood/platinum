@@ -96,7 +96,7 @@
 }
 
 .main-block {
-	padding-top: rem(96);
+	@include adaptiveValue('padding-top', 96, 36, 0, $maxWidthContainer, 375);
 	padding-bottom: rem(62);
 
 	&__container {
@@ -113,14 +113,14 @@
 
 	&__title {
 		font-family: Wadik, sans-serif;
-		@include adaptiveValue('font-size', 60, 40, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('font-size', 60, 26, 0, $maxWidthContainer, 375);
 		font-weight: 700;
 		text-align: center;
 		color: cl('background');
 		max-width: rem(900);
 
 		&:not(:last-child) {
-			margin-bottom: rem(35);
+			@include adaptiveValue('margin-bottom', 35, 16, 0, $maxWidthContainer, 375);
 		}
 
 		max-width: rem(1120);
@@ -130,7 +130,7 @@
 	&__text {
 		color: cl('grey');
 		text-align: center;
-		@include adaptiveValue('font-size', 25, 20, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('font-size', 25, 18, 0, $maxWidthContainer, 375);
 
 		max-width: rem(620);
 		margin: 0 auto;
@@ -219,7 +219,7 @@
 }
 
 .craft {
-	padding-bottom: rem(124);
+	@include adaptiveValue('padding-bottom', 124, 48, 0, $maxWidthContainer, 375);
 	background: radial-gradient(#5f958f, #15253d) !important;
 
 	&__container {
@@ -229,9 +229,12 @@
 	}
 
 	&__title {
-		margin-left: rem(-56);
-		margin-right: rem(-56);
 		text-align: center;
+
+		@media (min-width: $mobileSmall) {
+			margin-left: rem(-56);
+			margin-right: rem(-56);
+		}
 
 		&:not(:last-child) {
 			@include adaptiveValue('margin-bottom', 100, 80, 0, $maxWidthContainer, 375);
@@ -410,7 +413,7 @@
 }
 
 .service {
-	padding-top: rem(140);
+	@include adaptiveValue('padding-top', 140, 36, 0, $maxWidthContainer, 375);
 	background: radial-gradient(#5f958f, #15253d) !important;
 
 	&__container {
@@ -430,15 +433,18 @@
 		}
 
 		&:not(:last-child) {
-			@include adaptiveValue('margin-bottom', 90, 64, 0, $maxWidthContainer, 375);
+			@include adaptiveValue('margin-bottom', 90, 36, 0, $maxWidthContainer, 375);
 		}
 	}
 
 	&__content {
+		overflow: auto;
+	}
+
+	&__content-inner {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		width: max(calc(var(--item-width) * 3), 100%);
-		@include adaptiveValue('gap', 28, 16, 0, $maxWidthContainer, 375);
+		min-width: rem(1120);
 	}
 
 	&__item {
@@ -448,18 +454,6 @@
 .item-service {
 	width: max(100%, rem(258));
 
-	&:hover {
-		.item-service__image-ibg {
-			.hidden {
-				display: none;
-			}
-
-			.shown {
-				display: block;
-			}
-		}
-	}
-
 	&__title {
 		font-family: Wadik, sans-serif;
 		font-size: rem(15);
@@ -468,22 +462,29 @@
 		&:not(:last-child) {
 			@include adaptiveValue('margin-bottom', 30, 24, 0, $maxWidthContainer, 375);
 		}
+
+		@media (max-width: $mobile) {
+			text-align: center;
+		}
 	}
 
-	&__image-ibg {
+	&__image {
 		width: 100%;
-		padding-bottom: 100%;
+		height: 100%;
+		box-shadow: inset 0 0 0 0 #15253d;
+		transition: box-shadow 0.6s ease-in-out;
+
+		&:hover {
+			box-shadow: inset 0 0 0 180px #15253d;
+		}
 
 		&:not(:last-child) {
 			@include adaptiveValue('margin-bottom', 38, 24, 0, $maxWidthContainer, 375);
 		}
 
-		.shown {
-			display: none;
-		}
-
-		.hidden {
-			object-fit: fill;
+		img {
+			max-width: 100%;
+			width: 100%;
 		}
 	}
 
@@ -575,14 +576,18 @@
 
 	&__body {
 		display: flex;
-		gap: rem(32);
+		@include adaptiveValue('gap', 32, 24, 0, 768, 375);
 		justify-content: space-between;
+
+		@media (max-width: $mobile) {
+			flex-direction: column;
+		}
 	}
 
 	&__title {
 		color: cl('background');
 		font-family: Syne, sans-serif;
-		font-size: rem(40);
+		@include adaptiveValue('font-size', 40, 32, 0, $maxWidthContainer, 375);
 		font-weight: 700;
 		line-height: normal;
 
@@ -602,7 +607,7 @@
 
 	&__text {
 		color: cl('black');
-		font-size: rem(25);
+		@include adaptiveValue('font-size', 25, 18, 0, $maxWidthContainer, 375);
 		line-height: normal;
 
 		&:not(:last-child) {
@@ -643,14 +648,25 @@
 		}
 	}
 
+	&__wrapper {
+		@include adaptiveValue('height', 96, 36, 0, $maxWidthContainer, 375);
+	}
+
 	&__row {
-		display: grid;
-		gap: rem(88);
-		grid-template-columns: repeat(5, auto);
+		display: flex;
+		@include adaptiveValue('gap', 88, 36, 0, $maxWidthContainer, 375);
 		align-items: center;
+		height: 100%;
 	}
 
 	&__item {
+		height: 100%;
+
+		img {
+			max-width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
 	}
 }
 
@@ -659,14 +675,18 @@
 	}
 
 	&__body {
-		padding: rem(54) 0 rem(134);
 		border-bottom: rem(1) solid cl('grey-2');
-		margin-bottom: rem(112);
+		@include adaptiveValue('padding-top', 54, 36, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('padding-bottom', 134, 56, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('margin-bottom', 112, 56, 0, $maxWidthContainer, 375);
 	}
 
 	&__quote {
 		position: relative;
-		padding: rem(90) rem(64);
+		@include adaptiveValue('padding-top', 90, 36, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('padding-bottom', 90, 64, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('padding-left', 64, 36, 0, $maxWidthContainer, 375);
+		@include adaptiveValue('padding-right', 64, 36, 0, $maxWidthContainer, 375);
 
 		&:not(:last-child) {
 			margin-bottom: rem(20);
@@ -745,7 +765,7 @@
 
 	&__user-info {
 		&:not(:last-child) {
-			margin-bottom: rem(56);
+			@include adaptiveValue('margin-bottom', 56, 24, 0, $maxWidthContainer, 375);
 		}
 	}
 
@@ -770,9 +790,17 @@
 	}
 
 	&__row {
-		display: grid;
-		gap: rem(140);
-		grid-template-columns: repeat(4, auto);
+		@media (min-width: $mobile) {
+			display: grid;
+			@include adaptiveValue('gap', 140, 16, 0, $maxWidthContainer, 375);
+			grid-template-columns: repeat(4, auto);
+		}
+
+		@media (max-width: $mobile) {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
 	}
 
 	&__item {
@@ -791,7 +819,7 @@
 
 	&__item-number {
 		font-family: Syne, sans-serif;
-		font-size: rem(80);
+		@include adaptiveValue('font-size', 80, 56, 0, $maxWidthContainer, 375);
 		font-weight: 700;
 		line-height: normal;
 
@@ -803,7 +831,7 @@
 	&__item-number-sign {
 		color: cl('background');
 		font-family: Syne, sans-serif;
-		font-size: rem(40);
+		@include adaptiveValue('font-size', 40, 32, 0, $maxWidthContainer, 375);
 		font-weight: 700;
 		line-height: normal;
 	}
@@ -811,7 +839,7 @@
 	&__item-text {
 		color: cl('background');
 		font-family: Syne, sans-serif;
-		font-size: rem(25);
+		@include adaptiveValue('font-size', 25, 22, 0, $maxWidthContainer, 375);
 		font-weight: 500;
 		line-height: normal;
 	}

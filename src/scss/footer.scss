@@ -10,6 +10,10 @@
 		justify-content: center;
 		align-items: center;
 
+		@media (max-width: $mobile) {
+			display: none;
+		}
+
 		&:nth-child(1) {
 			top: 5%;
 			left: 5%;
@@ -77,7 +81,7 @@
 
 	&__top {
 		@include adaptiveValue('padding-top', 30, 24, 0, 1920, 375);
-		@include adaptiveValue('padding-bottom', 48, 36, 0, 1920, 375);
+		@include adaptiveValue('padding-bottom', 48, 24, 0, 1920, 375);
 	}
 
 	&__body {
@@ -86,6 +90,7 @@
 		padding-top: rem(20);
 		@media (min-width: $mobile) {
 			border-top: 1px solid cl('border');
+			padding-top: 0;
 		}
 	}
 
@@ -118,7 +123,7 @@
 
 	&__top {
 		&:not(:last-child) {
-			padding-bottom: rem(47);
+			@include adaptiveValue('padding-bottom', 47, 24, 0, $maxWidthContainer, 375);
 			border-bottom: rem(1) solid cl('border');
 		}
 	}
@@ -146,12 +151,23 @@
 		font-size: rem(30);
 		font-weight: 700;
 		line-height: normal;
+
+		@media (max-width: $mobile) {
+			flex-direction: column;
+
+			span {
+				display: none;
+			}
+		}
 	}
 
 	&__top-phone {
 	}
 
 	&__top-email {
+		@media (max-width: $mobile) {
+			text-align: center;
+		}
 	}
 
 	&__main {

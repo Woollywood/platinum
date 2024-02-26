@@ -153,7 +153,7 @@ flsForms.formFieldsInit({
 Документация плагина: https://swiperjs.com/
 Сниппет(HTML): swiper
 */
-// import "./libs/sliders.js";
+import './libs/sliders.js';
 
 /*
 Документация плагина: https://www.chartjs.org/docs/latest/

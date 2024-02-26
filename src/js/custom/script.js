@@ -101,23 +101,25 @@ class SliderAnimation {
 }
 
 window.addEventListener('load', (event) => {
-	const slider = new Slider(document.querySelector('.main-block__slider'), {
-		spaceBetween: 20,
-		breakpoints: {
-			320: {
-				slidesPerView: 2,
+	document.querySelectorAll('[data-slider]').forEach((slider) => {
+		new Slider(slider, {
+			spaceBetween: 20,
+			breakpoints: {
+				320: {
+					slidesPerView: 2,
+				},
+				479: {
+					slidesPerView: 4,
+				},
+				789: {
+					slidesPerView: 4,
+				},
+				1280: {
+					slidesPerView: 6,
+				},
 			},
-			479: {
-				slidesPerView: 4,
-			},
-			789: {
-				slidesPerView: 4,
-			},
-			1280: {
-				slidesPerView: 6,
-			},
-		},
-		plugins: [SliderAnimation],
+			plugins: [SliderAnimation],
+		});
 	});
 
 	headerMenuItemHover();

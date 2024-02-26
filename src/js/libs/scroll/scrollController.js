@@ -221,40 +221,6 @@ function gsapFromTimeline() {
 	});
 }
 
-function scrollSlider() {
-	const scrollSliderContainerList = document.querySelectorAll('[data-scroll-slider-container]');
-	scrollSliderContainerList.forEach((scrollSliderContainer) => {
-		const scrollSlider = scrollSliderContainer.querySelector('[data-scroll-slider');
-
-		if (scrollSliderContainer.getBoundingClientRect().width === scrollSlider.getBoundingClientRect().width) {
-			return;
-		}
-
-		const dataValue = scrollSlider.dataset.scrollSlider;
-		const sliderWidth = scrollSlider.getBoundingClientRect().width;
-		const amountToScroll =
-			sliderWidth +
-			(dataValue.includes('+=') ? +dataValue.slice(dataValue.indexOf('=') + 1, dataValue.length) : 0) -
-			window.innerWidth;
-
-		const tween = gsap.to(scrollSlider, {
-			x: -amountToScroll,
-			duration: 3,
-			ease: 'none',
-		});
-
-		ScrollTrigger.create({
-			trigger: scrollSliderContainer,
-			start: 'top 20%',
-			end: '+=' + amountToScroll,
-			scroller: '[data-scroll-container]',
-			pin: true,
-			animation: tween,
-			scrub: 1,
-		});
-	});
-}
-
 function parallaxsImages() {
 	const items = document.querySelectorAll('[data-parallax-item]');
 	items.forEach((item) => {
