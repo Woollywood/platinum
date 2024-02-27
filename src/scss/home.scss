@@ -1,5 +1,10 @@
 //====================================================================================================
 
+body {
+	view-timeline-name: --scroll-timeline;
+	view-timeline-axis: block;
+}
+
 .page {
 	position: relative;
 }
@@ -339,6 +344,27 @@
 .card-craft {
 	position: relative;
 
+	&--1 {
+		animation: parallax-1 auto linear;
+		animation-timeline: --scroll-timeline;
+	}
+	&--2 {
+		animation: parallax-2 auto linear;
+		animation-timeline: --scroll-timeline;
+	}
+	&--3 {
+		animation: parallax-3 auto linear;
+		animation-timeline: --scroll-timeline;
+	}
+	&--4 {
+		animation: parallax-4 auto linear;
+		animation-timeline: --scroll-timeline;
+	}
+	&--5 {
+		animation: parallax-5 auto linear;
+		animation-timeline: --scroll-timeline;
+	}
+
 	&:hover {
 		.card-craft__view {
 			opacity: 1;
@@ -409,6 +435,52 @@
 		&:hover {
 			transform: scale(1.2);
 		}
+	}
+}
+
+@keyframes parallax-1 {
+	from {
+		transform: translateY(20%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
+@keyframes parallax-2 {
+	from {
+		transform: translateY(30%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
+@keyframes parallax-3 {
+	from {
+		transform: translateY(40%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
+@keyframes parallax-4 {
+	from {
+		transform: translateY(50%);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
+@keyframes parallax-5 {
+	from {
+		transform: translateY(60%);
+	}
+
+	to {
+		transform: translateY(0);
 	}
 }
 

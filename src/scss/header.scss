@@ -133,10 +133,11 @@
 		font-size: rem(18);
 		font-weight: 500;
 		transition: all 0.3s ease;
-		color: cl('white');
+		color: cl('background');
 
 		@media (max-width: $mobile) {
 			font-size: rem(20);
+			color: cl('white');
 		}
 
 		&:hover {
