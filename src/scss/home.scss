@@ -1,10 +1,5 @@
 //====================================================================================================
 
-body {
-	view-timeline-name: --scroll-timeline;
-	view-timeline-axis: block;
-}
-
 .page {
 	position: relative;
 }
@@ -344,27 +339,6 @@ body {
 .card-craft {
 	position: relative;
 
-	&--1 {
-		animation: parallax-1 auto linear;
-		animation-timeline: --scroll-timeline;
-	}
-	&--2 {
-		animation: parallax-2 auto linear;
-		animation-timeline: --scroll-timeline;
-	}
-	&--3 {
-		animation: parallax-3 auto linear;
-		animation-timeline: --scroll-timeline;
-	}
-	&--4 {
-		animation: parallax-4 auto linear;
-		animation-timeline: --scroll-timeline;
-	}
-	&--5 {
-		animation: parallax-5 auto linear;
-		animation-timeline: --scroll-timeline;
-	}
-
 	&:hover {
 		.card-craft__view {
 			opacity: 1;
@@ -435,52 +409,6 @@ body {
 		&:hover {
 			transform: scale(1.2);
 		}
-	}
-}
-
-@keyframes parallax-1 {
-	from {
-		transform: translateY(20%);
-	}
-
-	to {
-		transform: translateY(0);
-	}
-}
-@keyframes parallax-2 {
-	from {
-		transform: translateY(30%);
-	}
-
-	to {
-		transform: translateY(0);
-	}
-}
-@keyframes parallax-3 {
-	from {
-		transform: translateY(40%);
-	}
-
-	to {
-		transform: translateY(0);
-	}
-}
-@keyframes parallax-4 {
-	from {
-		transform: translateY(50%);
-	}
-
-	to {
-		transform: translateY(0);
-	}
-}
-@keyframes parallax-5 {
-	from {
-		transform: translateY(60%);
-	}
-
-	to {
-		transform: translateY(0);
 	}
 }
 
@@ -697,7 +625,7 @@ body {
 
 .partners {
 	&:not(:last-child) {
-		padding-bottom: rem(82);
+		@include adaptiveValue('padding-bottom', 82, 32, 0, $maxWidthContainer, 375);
 	}
 
 	&__container {
@@ -716,23 +644,59 @@ body {
 		letter-spacing: rem(11.3);
 
 		&:not(:last-child) {
-			margin-bottom: rem(54);
+			@include adaptiveValue('margin-bottom', 54, 24, 0, $maxWidthContainer, 375);
 		}
 	}
 
 	&__wrapper {
-		@include adaptiveValue('height', 96, 36, 0, $maxWidthContainer, 375);
+		--items-count: 10;
+		--items-in-viewport: 5;
+		--item-width: max(calc(100vw / var(--items-in-viewport)), 30vw);
+		--gap: 88px;
+
+		--slide-width-full: calc((var(--item-width) * var(--items-count)) + (var(--gap) * var(--items-count)));
+		--slide-width-viewport: calc(var(--item-width) * var(--items-in-viewport));
+
+		@media (max-width: 1280) {
+			--items-in-viewport: 4;
+		}
+
+		@media (max-width: 768) {
+			--items-in-viewport: 3;
+		}
+
+		@keyframes slide {
+			from {
+				transform: translateX(0);
+			}
+
+			to {
+				transform: translateX(calc((var(--slide-width-full) - var(--slide-width-viewport)) * -1));
+			}
+		}
 	}
 
 	&__row {
+		width: calc((var(--item-width) * var(--items-count)) + (var(--gap) * var(--items-count)));
+
 		display: flex;
-		@include adaptiveValue('gap', 88, 36, 0, $maxWidthContainer, 375);
 		align-items: center;
 		height: 100%;
+		gap: var(--gap);
+
+		@include adaptiveValue('height', 96, 56, 0, $maxWidthContainer, 375);
+
+		animation: slide calc(1s * var(--items-count)) linear alternate infinite;
 	}
 
 	&__item {
+		width: var(--item-width);
 		height: 100%;
+		flex-shrink: 0;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
 		img {
 			max-width: 100%;
@@ -802,7 +766,7 @@ body {
 	&__quote-text {
 		text-align: center;
 		color: cl('background');
-		font-size: rem(25);
+		@include adaptiveValue('font-size', 25, 18, 0, $maxWidthContainer, 375);
 		line-height: normal;
 	}
 
@@ -918,7 +882,8 @@ body {
 }
 
 .team {
-	padding: rem(155) 0 rem(120);
+	@include adaptiveValue('padding-top', 155, 16, 0, $maxWidthContainer, 375);
+	@include adaptiveValue('padding-bottom', 120, 24, 0, $maxWidthContainer, 375);
 	background: radial-gradient(#5f958f, #15253d) !important;
 
 	&__container {
@@ -930,6 +895,10 @@ body {
 	&__row-wrapper {
 		position: relative;
 
+		@media (max-width: 1024px) {
+			display: none;
+		}
+
 		&:not(:last-child) {
 			margin-bottom: rem(134);
 		}
@@ -939,14 +908,18 @@ body {
 		position: absolute;
 		z-index: 1;
 		top: 50%;
-		left: rem(-240);
-		transform: translateY(-50%);
+		left: 50%;
+		transform: translate(-50%, -50%);
 
 		font-family: Wadik, sans-serif;
 		font-size: rem(250);
 		font-weight: 700;
 		line-height: normal;
 		white-space: nowrap;
+
+		@media (max-width: 1468px) {
+			font-size: rem(128);
+		}
 
 		background: linear-gradient(
 			90deg,
@@ -961,15 +934,19 @@ body {
 
 	&__row {
 		display: flex;
-		gap: rem(34);
+		@include adaptiveValue('gap', 34, 16, 0, $maxWidthContainer, 1024);
+
+		&:not(:last-child) {
+			@include adaptiveValue('margin-bottom', 36, 24, 0, $maxWidthContainer, 375);
+		}
 
 		&--top {
-			padding-left: rem(130);
-			margin-right: rem(-130);
+			@include adaptiveValue('padding-left', 130, 0, 0, 1668, 1024);
+			@include adaptiveValue('margin-right', -130, 0, 0, 1668, 1024);
 		}
 
 		&--bottom {
-			margin-left: rem(-190);
+			@include adaptiveValue('margin-left', -190, 0, 0, 1668, 1024);
 		}
 	}
 
@@ -993,7 +970,7 @@ body {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		gap: rem(76);
+		@include adaptiveValue('gap', 76, 36, 0, $maxWidthContainer, 1024);
 	}
 
 	&__row-sep-top,
@@ -1037,6 +1014,47 @@ body {
 		background-color: transparent;
 		border: rem(1) solid cl('white');
 		color: cl('white');
+	}
+
+	&__row-mobile {
+		@media (min-width: 1024px) {
+			display: none;
+		}
+
+		margin-bottom: rem(32);
+	}
+
+	&__row-title {
+		text-align: center;
+		@include adaptiveValue('font-size', 128, 56, 0, $maxWidthContainer, 375);
+		margin-bottom: rem(24);
+
+		background: linear-gradient(
+			90deg,
+			rgba(255, 255, 255, 0.04) 4.69%,
+			#f4f4f4 49.74%,
+			rgba(255, 255, 255, 0.08) 94.48%
+		);
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	&__mobile-slider {
+	}
+
+	&__mobile-slider-wrapper {
+	}
+
+	&__swiper {
+	}
+
+	&__mobile-slide {
+	}
+
+	&__mobile-ibg {
+		width: 100%;
+		padding-bottom: 120%;
 	}
 }
 

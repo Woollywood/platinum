@@ -38,8 +38,28 @@ function buildSliders() {
 
 // Инициализация слайдеров
 function initSliders() {
-	// Список слайдеров
-	// Проверяем, есть ли слайдер на странице
+	if (document.querySelector('.team__mobile-slider')) {
+		// Указываем класс нужного слайдера
+		// Создаем слайдер
+		new Swiper('.team__mobile-slider', {
+			// Указываем класс нужного слайдера
+			// Подключаем модули слайдера
+			// для конкретного случая
+			observer: true,
+			observeParents: true,
+			spaceBetween: 16,
+
+			breakpoints: {
+				320: {
+					slidesPerView: 1,
+				},
+				568: {
+					slidesPerView: 2,
+				},
+			},
+		});
+	}
+
 	if (document.querySelector('.service__slider')) {
 		// Указываем класс нужного слайдера
 		// Создаем слайдер
