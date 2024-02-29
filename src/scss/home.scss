@@ -686,7 +686,7 @@
 
 		@include adaptiveValue('height', 96, 56, 0, $maxWidthContainer, 375);
 
-		animation: slide calc(1s * var(--items-count)) linear alternate infinite;
+		animation: slide calc(2s * var(--items-count)) linear alternate infinite;
 	}
 
 	&__item {

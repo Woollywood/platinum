@@ -187,13 +187,7 @@
 	}
 
 	&__logo {
-		font-family: Syne, sans-serif;
-		background-color: cl('background');
-		font-size: rem(30);
-		font-weight: 500;
-		color: cl('white');
 		padding: rem(0.6) rem(6);
-		text-decoration: underline;
 
 		align-self: flex-start;
 	}
