@@ -3445,7 +3445,7 @@
                 spaceBetween: 16,
                 breakpoints: {
                     320: {
-                        slidesPerView: 1
+                        slidesPerView: 1.5
                     },
                     568: {
                         slidesPerView: 2
@@ -3460,7 +3460,7 @@
                 autoHeight: true,
                 breakpoints: {
                     320: {
-                        slidesPerView: 1
+                        slidesPerView: 1.5
                     },
                     668: {
                         slidesPerView: 2
