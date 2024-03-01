@@ -7,7 +7,7 @@
 	<meta name="format-detection" content="telephone=no" />
 	<!-- <style>body{opacity: 0;}</style> -->
 
-	<link rel="stylesheet" href="css/style.min.css?_v=20240301004000" />
+	<link rel="stylesheet" href="css/style.min.css?_v=20240301040437" />
 	<link rel="shortcut icon" href="favicon.ico" />
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,11 +32,21 @@
 					<div class="header__right">
 						<nav class="header__menu menu" data-da=".menu-mobile, 767.98, 0">
 							<ul class="menu__list">
-								<li class="menu__item"><a class="menu__link" href="#" data-header-link>Главная</a></li>
-								<li class="menu__item"><a class="menu__link" href="#" data-header-link>О Нас</a></li>
-								<li class="menu__item"><a class="menu__link" href="#" data-header-link>Портфолио</a></li>
-								<li class="menu__item"><a class="menu__link" href="#" data-header-link>Команда</a></li>
-								<li class="menu__item"><a class="menu__link" href="#" data-header-link>Контакты</a></li>
+								<li class="menu__item">
+									<a class="menu__link" href="#" data-goto="#main-section" data-header-link>Главная</a>
+								</li>
+								<li class="menu__item">
+									<a class="menu__link" href="#" data-goto="#about-section" data-header-link>О Нас</a>
+								</li>
+								<li class="menu__item">
+									<a class="menu__link" href="#" data-goto="#portfolio-section" data-header-link>Портфолио</a>
+								</li>
+								<li class="menu__item">
+									<a class="menu__link" href="#" data-goto="#team-section" data-header-link>Команда</a>
+								</li>
+								<li class="menu__item">
+									<a class="menu__link" href="#" data-goto="#footer" data-header-link>Контакты</a>
+								</li>
 							</ul>
 						</nav>
 						<button class="header__burger icon-menu">
@@ -86,7 +96,7 @@
 		</header>
 
 		<main class="page">
-			<section class="main-block background-white">
+			<section class="main-block background-white" id="main-section">
 				<div class="main-block__container _container">
 					<div class="main-block__text-wrapper">
 						<h1 class="main-block__title" data-reveal-init data-from-init="left">
@@ -153,7 +163,7 @@
 					<img src="img/main-slider/scroll-down.svg" alt="button-icon" />
 				</button>
 			</section>
-			<section class="what-we-do background-white">
+			<section class="what-we-do background-white" id="about-section">
 				<div class="what-we-do__container _container">
 					<div class="what-we-do__body">
 						<h2 class="what-we-do__title" data-aos="fade-right">Что мы <span>создаем?</span></h2>
@@ -311,7 +321,7 @@
 					</div>
 				</div>
 			</section>
-			<section class="craft background-black">
+			<section class="craft background-black" id="portfolio-section">
 				<div class="craft__container _container">
 					<div class="craft__body">
 						<h2 class="craft__title section-title" data-reveal-type data-from="right" data-aos="fade-left">
@@ -625,7 +635,7 @@
 					</div>
 				</div>
 			</div>
-			<section class="team background-black">
+			<section class="team background-black" id="team-section">
 				<div class="team__container _container">
 					<div class="team__body">
 						<div class="team__row-wrapper">
@@ -789,7 +799,7 @@
 				</div>
 			</section>
 		</main>
-		<footer class="footer background-white">
+		<footer class="footer background-white" id="footer">
 			<div class="footer__star footer__star--dark footer__star--big footer__star">
 				<svg>
 					<use xlink:href="img/icons/icons.svg#star"></use>
@@ -903,7 +913,7 @@
 		</footer>
 
 	</div>
-	<script src="js/app.min.js?_v=20240301004000"></script>
+	<script src="js/app.min.js?_v=20240301040437"></script>
 
 </body>
 
