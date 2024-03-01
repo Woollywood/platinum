@@ -148,7 +148,7 @@
 
 		color: cl('grey');
 		font-family: Syne, sans-serif;
-		font-size: rem(30);
+		@include adaptiveValue('font-size', 30, 20, 0, $maxWidthContainer, 375);
 		font-weight: 700;
 		line-height: normal;
 

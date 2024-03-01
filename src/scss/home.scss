@@ -439,6 +439,10 @@
 
 	&__content {
 		overflow: auto;
+
+		@media (max-width: $mobile) {
+			overflow: visible !important;
+		}
 	}
 
 	&__content-inner {
@@ -1041,6 +1045,9 @@
 	}
 
 	&__mobile-slider {
+		@media (max-width: $mobile) {
+			overflow: visible !important;
+		}
 	}
 
 	&__mobile-slider-wrapper {
