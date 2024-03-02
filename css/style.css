@@ -830,12 +830,13 @@ h6 {
 }
 
 .footer__columns {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -ms-grid;
+  display: grid;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -ms-grid-columns: (1fr)[3];
+  grid-template-columns: repeat(3, 1fr);
   -webkit-column-gap: 4.75rem;
      -moz-column-gap: 4.75rem;
           column-gap: 4.75rem;
@@ -1762,6 +1763,7 @@ h6 {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  opacity: 0;
 }
 
 .team__row-icon svg {
@@ -3982,6 +3984,14 @@ body[data-aos-easing=ease-in-out-quart] [data-aos] {
 @media (max-width: 768) {
   .partners__wrapper {
     --items-in-viewport: 3;
+  }
+}
+
+@media (max-width: 92.5em) {
+  .footer__columns {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
   }
 }
 
