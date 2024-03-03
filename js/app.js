@@ -3631,6 +3631,479 @@
         }
         const da = new DynamicAdapt("max");
         da.init();
+        (() => {
+            function append(...nodes) {
+                const length = nodes.length;
+                for (let i = 0; i < length; i++) {
+                    const node = nodes[i];
+                    if (node.nodeType === 1 || node.nodeType === 11) this.appendChild(node); else this.appendChild(document.createTextNode(String(node)));
+                }
+            }
+            function replaceChildren(...nodes) {
+                while (this.lastChild) this.removeChild(this.lastChild);
+                if (nodes.length) this.append(...nodes);
+            }
+            function replaceWith(...nodes) {
+                const parent = this.parentNode;
+                let i = nodes.length;
+                if (!parent) return;
+                if (!i) parent.removeChild(this);
+                while (i--) {
+                    let node = nodes[i];
+                    if (typeof node !== "object") node = this.ownerDocument.createTextNode(node); else if (node.parentNode) node.parentNode.removeChild(node);
+                    if (!i) parent.replaceChild(node, this); else parent.insertBefore(this.previousSibling, node);
+                }
+            }
+            if (typeof Element !== "undefined") {
+                if (!Element.prototype.append) {
+                    Element.prototype.append = append;
+                    DocumentFragment.prototype.append = append;
+                }
+                if (!Element.prototype.replaceChildren) {
+                    Element.prototype.replaceChildren = replaceChildren;
+                    DocumentFragment.prototype.replaceChildren = replaceChildren;
+                }
+                if (!Element.prototype.replaceWith) {
+                    Element.prototype.replaceWith = replaceWith;
+                    DocumentFragment.prototype.replaceWith = replaceWith;
+                }
+            }
+        })();
+        function dist_extend(target, object) {
+            return Object.getOwnPropertyNames(Object(target)).reduce(((extended, key) => {
+                const currentValue = Object.getOwnPropertyDescriptor(Object(target), key);
+                const newValue = Object.getOwnPropertyDescriptor(Object(object), key);
+                return Object.defineProperty(extended, key, newValue || currentValue);
+            }), {});
+        }
+        function isString(value) {
+            return typeof value === "string";
+        }
+        function isArray(value) {
+            return Array.isArray(value);
+        }
+        function parseSettings(settings = {}) {
+            const object = dist_extend(settings);
+            let types;
+            if (object.types !== void 0) types = object.types; else if (object.split !== void 0) types = object.split;
+            if (types !== void 0) object.types = (isString(types) || isArray(types) ? String(types) : "").split(",").map((type => String(type).trim())).filter((type => /((line)|(word)|(char))/i.test(type)));
+            if (object.absolute || object.position) object.absolute = object.absolute || /absolute/.test(settings.position);
+            return object;
+        }
+        function parseTypes(value) {
+            const types = isString(value) || isArray(value) ? String(value) : "";
+            return {
+                none: !types,
+                lines: /line/i.test(types),
+                words: /word/i.test(types),
+                chars: /char/i.test(types)
+            };
+        }
+        function dist_isObject(value) {
+            return value !== null && typeof value === "object";
+        }
+        function dist_isNode(input) {
+            return dist_isObject(input) && /^(1|3|11)$/.test(input.nodeType);
+        }
+        function isLength(value) {
+            return typeof value === "number" && value > -1 && value % 1 === 0;
+        }
+        function isArrayLike(value) {
+            return dist_isObject(value) && isLength(value.length);
+        }
+        function toArray(value) {
+            if (isArray(value)) return value;
+            if (value == null) return [];
+            return isArrayLike(value) ? Array.prototype.slice.call(value) : [ value ];
+        }
+        function getTargetElements(target) {
+            let elements = target;
+            if (isString(target)) if (/^(#[a-z]\w+)$/.test(target.trim())) elements = document.getElementById(target.trim().slice(1)); else elements = document.querySelectorAll(target);
+            return toArray(elements).reduce(((result, element) => [ ...result, ...toArray(element).filter(dist_isNode) ]), []);
+        }
+        const {entries, keys, values} = Object;
+        const expando = `_splittype`;
+        const cache = {};
+        let uid = 0;
+        function set(owner, key, value) {
+            if (!dist_isObject(owner)) {
+                console.warn("[data.set] owner is not an object");
+                return null;
+            }
+            const id = owner[expando] || (owner[expando] = ++uid);
+            const data = cache[id] || (cache[id] = {});
+            if (value === void 0) {
+                if (!!key && Object.getPrototypeOf(key) === Object.prototype) cache[id] = {
+                    ...data,
+                    ...key
+                };
+            } else if (key !== void 0) data[key] = value;
+            return value;
+        }
+        function get(owner, key) {
+            const id = dist_isObject(owner) ? owner[expando] : null;
+            const data = id && cache[id] || {};
+            if (key === void 0) return data;
+            return data[key];
+        }
+        function remove(element) {
+            const id = element && element[expando];
+            if (id) {
+                delete element[id];
+                delete cache[id];
+            }
+        }
+        function cleanup() {
+            entries(cache).forEach((([id, {isRoot, isSplit}]) => {
+                if (!isRoot || !isSplit) {
+                    cache[id] = null;
+                    delete cache[id];
+                }
+            }));
+        }
+        function toWords(value, separator = " ") {
+            const string = value ? String(value) : "";
+            return string.trim().replace(/\s+/g, " ").split(separator);
+        }
+        const rsAstralRange = "\\ud800-\\udfff";
+        const rsComboMarksRange = "\\u0300-\\u036f\\ufe20-\\ufe23";
+        const rsComboSymbolsRange = "\\u20d0-\\u20f0";
+        const rsVarRange = "\\ufe0e\\ufe0f";
+        const rsAstral = `[${rsAstralRange}]`;
+        const rsCombo = `[${rsComboMarksRange}${rsComboSymbolsRange}]`;
+        const rsFitz = "\\ud83c[\\udffb-\\udfff]";
+        const rsModifier = `(?:${rsCombo}|${rsFitz})`;
+        const rsNonAstral = `[^${rsAstralRange}]`;
+        const rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+        const rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+        const rsZWJ = "\\u200d";
+        const reOptMod = `${rsModifier}?`;
+        const rsOptVar = `[${rsVarRange}]?`;
+        const rsOptJoin = "(?:" + rsZWJ + "(?:" + [ rsNonAstral, rsRegional, rsSurrPair ].join("|") + ")" + rsOptVar + reOptMod + ")*";
+        const rsSeq = rsOptVar + reOptMod + rsOptJoin;
+        const rsSymbol = `(?:${[ `${rsNonAstral}${rsCombo}?`, rsCombo, rsRegional, rsSurrPair, rsAstral ].join("|")}\n)`;
+        const reUnicode = RegExp(`${rsFitz}(?=${rsFitz})|${rsSymbol}${rsSeq}`, "g");
+        const unicodeRange = [ rsZWJ, rsAstralRange, rsComboMarksRange, rsComboSymbolsRange, rsVarRange ];
+        const reHasUnicode = RegExp(`[${unicodeRange.join("")}]`);
+        function asciiToArray(string) {
+            return string.split("");
+        }
+        function hasUnicode(string) {
+            return reHasUnicode.test(string);
+        }
+        function unicodeToArray(string) {
+            return string.match(reUnicode) || [];
+        }
+        function stringToArray(string) {
+            return hasUnicode(string) ? unicodeToArray(string) : asciiToArray(string);
+        }
+        function dist_toString(value) {
+            return value == null ? "" : String(value);
+        }
+        function toChars(string, separator = "") {
+            string = dist_toString(string);
+            if (string && isString(string)) if (!separator && hasUnicode(string)) return stringToArray(string);
+            return string.split(separator);
+        }
+        function dist_createElement(name, attributes) {
+            const element = document.createElement(name);
+            if (!attributes) return element;
+            Object.keys(attributes).forEach((attribute => {
+                const rawValue = attributes[attribute];
+                const value = isString(rawValue) ? rawValue.trim() : rawValue;
+                if (value === null || value === "") return;
+                if (attribute === "children") element.append(...toArray(value)); else element.setAttribute(attribute, value);
+            }));
+            return element;
+        }
+        var dist_defaults = {
+            splitClass: "",
+            lineClass: "line",
+            wordClass: "word",
+            charClass: "char",
+            types: [ "lines", "words", "chars" ],
+            absolute: false,
+            tagName: "div"
+        };
+        function splitWordsAndChars(textNode, settings) {
+            settings = dist_extend(dist_defaults, settings);
+            const types = parseTypes(settings.types);
+            const TAG_NAME = settings.tagName;
+            const VALUE = textNode.nodeValue;
+            const splitText = document.createDocumentFragment();
+            let words = [];
+            let chars = [];
+            if (/^\s/.test(VALUE)) splitText.append(" ");
+            words = toWords(VALUE).reduce(((result, WORD, idx, arr) => {
+                let wordElement;
+                let characterElementsForCurrentWord;
+                if (types.chars) characterElementsForCurrentWord = toChars(WORD).map((CHAR => {
+                    const characterElement = dist_createElement(TAG_NAME, {
+                        class: `${settings.splitClass} ${settings.charClass}`,
+                        style: "display: inline-block;",
+                        children: CHAR
+                    });
+                    set(characterElement, "isChar", true);
+                    chars = [ ...chars, characterElement ];
+                    return characterElement;
+                }));
+                if (types.words || types.lines) {
+                    wordElement = dist_createElement(TAG_NAME, {
+                        class: `${settings.wordClass} ${settings.splitClass}`,
+                        style: `display: inline-block; ${types.words && settings.absolute ? `position: relative;` : ""}`,
+                        children: types.chars ? characterElementsForCurrentWord : WORD
+                    });
+                    set(wordElement, {
+                        isWord: true,
+                        isWordStart: true,
+                        isWordEnd: true
+                    });
+                    splitText.appendChild(wordElement);
+                } else characterElementsForCurrentWord.forEach((characterElement => {
+                    splitText.appendChild(characterElement);
+                }));
+                if (idx < arr.length - 1) splitText.append(" ");
+                return types.words ? result.concat(wordElement) : result;
+            }), []);
+            if (/\s$/.test(VALUE)) splitText.append(" ");
+            textNode.replaceWith(splitText);
+            return {
+                words,
+                chars
+            };
+        }
+        function split(node, settings) {
+            const type = node.nodeType;
+            const wordsAndChars = {
+                words: [],
+                chars: []
+            };
+            if (!/(1|3|11)/.test(type)) return wordsAndChars;
+            if (type === 3 && /\S/.test(node.nodeValue)) return splitWordsAndChars(node, settings);
+            const childNodes = toArray(node.childNodes);
+            if (childNodes.length) {
+                set(node, "isSplit", true);
+                if (!get(node).isRoot) {
+                    node.style.display = "inline-block";
+                    node.style.position = "relative";
+                    const nextSibling = node.nextSibling;
+                    const prevSibling = node.previousSibling;
+                    const text = node.textContent || "";
+                    const textAfter = nextSibling ? nextSibling.textContent : " ";
+                    const textBefore = prevSibling ? prevSibling.textContent : " ";
+                    set(node, {
+                        isWordEnd: /\s$/.test(text) || /^\s/.test(textAfter),
+                        isWordStart: /^\s/.test(text) || /\s$/.test(textBefore)
+                    });
+                }
+            }
+            return childNodes.reduce(((result, child) => {
+                const {words, chars} = split(child, settings);
+                return {
+                    words: [ ...result.words, ...words ],
+                    chars: [ ...result.chars, ...chars ]
+                };
+            }), wordsAndChars);
+        }
+        function getPosition(node, isWord, settings, scrollPos) {
+            if (!settings.absolute) return {
+                top: isWord ? node.offsetTop : null
+            };
+            const parent = node.offsetParent;
+            const [scrollX, scrollY] = scrollPos;
+            let parentX = 0;
+            let parentY = 0;
+            if (parent && parent !== document.body) {
+                const parentRect = parent.getBoundingClientRect();
+                parentX = parentRect.x + scrollX;
+                parentY = parentRect.y + scrollY;
+            }
+            const {width, height, x, y} = node.getBoundingClientRect();
+            const top = y + scrollY - parentY;
+            const left = x + scrollX - parentX;
+            return {
+                width,
+                height,
+                top,
+                left
+            };
+        }
+        function unSplitWords(element) {
+            if (!get(element).isWord) toArray(element.children).forEach((child => unSplitWords(child))); else {
+                remove(element);
+                element.replaceWith(...element.childNodes);
+            }
+        }
+        const createFragment = () => document.createDocumentFragment();
+        function repositionAfterSplit(element, settings, scrollPos) {
+            const types = parseTypes(settings.types);
+            const TAG_NAME = settings.tagName;
+            const nodes = element.getElementsByTagName("*");
+            const wordsInEachLine = [];
+            let wordsInCurrentLine = [];
+            let lineOffsetY = null;
+            let elementHeight;
+            let elementWidth;
+            let contentBox;
+            let lines = [];
+            const parent = element.parentElement;
+            const nextSibling = element.nextElementSibling;
+            const splitText = createFragment();
+            const cs = window.getComputedStyle(element);
+            const align = cs.textAlign;
+            const fontSize = parseFloat(cs.fontSize);
+            const lineThreshold = fontSize * .2;
+            if (settings.absolute) {
+                contentBox = {
+                    left: element.offsetLeft,
+                    top: element.offsetTop,
+                    width: element.offsetWidth
+                };
+                elementWidth = element.offsetWidth;
+                elementHeight = element.offsetHeight;
+                set(element, {
+                    cssWidth: element.style.width,
+                    cssHeight: element.style.height
+                });
+            }
+            toArray(nodes).forEach((node => {
+                const isWordLike = node.parentElement === element;
+                const {width, height, top, left} = getPosition(node, isWordLike, settings, scrollPos);
+                if (/^br$/i.test(node.nodeName)) return;
+                if (types.lines && isWordLike) {
+                    if (lineOffsetY === null || top - lineOffsetY >= lineThreshold) {
+                        lineOffsetY = top;
+                        wordsInEachLine.push(wordsInCurrentLine = []);
+                    }
+                    wordsInCurrentLine.push(node);
+                }
+                if (settings.absolute) set(node, {
+                    top,
+                    left,
+                    width,
+                    height
+                });
+            }));
+            if (parent) parent.removeChild(element);
+            if (types.lines) {
+                lines = wordsInEachLine.map((wordsInThisLine => {
+                    const lineElement = dist_createElement(TAG_NAME, {
+                        class: `${settings.splitClass} ${settings.lineClass}`,
+                        style: `display: block; text-align: ${align}; width: 100%;`
+                    });
+                    set(lineElement, "isLine", true);
+                    const lineDimensions = {
+                        height: 0,
+                        top: 1e4
+                    };
+                    splitText.appendChild(lineElement);
+                    wordsInThisLine.forEach(((wordOrElement, idx, arr) => {
+                        const {isWordEnd, top, height} = get(wordOrElement);
+                        const next = arr[idx + 1];
+                        lineDimensions.height = Math.max(lineDimensions.height, height);
+                        lineDimensions.top = Math.min(lineDimensions.top, top);
+                        lineElement.appendChild(wordOrElement);
+                        if (isWordEnd && get(next).isWordStart) lineElement.append(" ");
+                    }));
+                    if (settings.absolute) set(lineElement, {
+                        height: lineDimensions.height,
+                        top: lineDimensions.top
+                    });
+                    return lineElement;
+                }));
+                if (!types.words) unSplitWords(splitText);
+                element.replaceChildren(splitText);
+            }
+            if (settings.absolute) {
+                element.style.width = `${element.style.width || elementWidth}px`;
+                element.style.height = `${elementHeight}px`;
+                toArray(nodes).forEach((node => {
+                    const {isLine, top, left, width, height} = get(node);
+                    const parentData = get(node.parentElement);
+                    const isChildOfLineNode = !isLine && parentData.isLine;
+                    node.style.top = `${isChildOfLineNode ? top - parentData.top : top}px`;
+                    node.style.left = isLine ? `${contentBox.left}px` : `${left - (isChildOfLineNode ? contentBox.left : 0)}px`;
+                    node.style.height = `${height}px`;
+                    node.style.width = isLine ? `${contentBox.width}px` : `${width}px`;
+                    node.style.position = "absolute";
+                }));
+            }
+            if (parent) if (nextSibling) parent.insertBefore(element, nextSibling); else parent.appendChild(element);
+            return lines;
+        }
+        let _defaults = dist_extend(dist_defaults, {});
+        class SplitType {
+            static get data() {
+                return cache;
+            }
+            static get defaults() {
+                return _defaults;
+            }
+            static set defaults(options) {
+                _defaults = dist_extend(_defaults, parseSettings(options));
+            }
+            static setDefaults(options) {
+                _defaults = dist_extend(_defaults, parseSettings(options));
+                return dist_defaults;
+            }
+            static revert(elements) {
+                getTargetElements(elements).forEach((element => {
+                    const {isSplit, html, cssWidth, cssHeight} = get(element);
+                    if (isSplit) {
+                        element.innerHTML = html;
+                        element.style.width = cssWidth || "";
+                        element.style.height = cssHeight || "";
+                        remove(element);
+                    }
+                }));
+            }
+            static create(target, options) {
+                return new SplitType(target, options);
+            }
+            constructor(elements, options) {
+                this.isSplit = false;
+                this.settings = dist_extend(_defaults, parseSettings(options));
+                this.elements = getTargetElements(elements);
+                this.split();
+            }
+            split(options) {
+                this.revert();
+                this.elements.forEach((element => {
+                    set(element, "html", element.innerHTML);
+                }));
+                this.lines = [];
+                this.words = [];
+                this.chars = [];
+                const scrollPos = [ window.pageXOffset, window.pageYOffset ];
+                if (options !== void 0) this.settings = dist_extend(this.settings, parseSettings(options));
+                const types = parseTypes(this.settings.types);
+                if (types.none) return;
+                this.elements.forEach((element => {
+                    set(element, "isRoot", true);
+                    const {words, chars} = split(element, this.settings);
+                    this.words = [ ...this.words, ...words ];
+                    this.chars = [ ...this.chars, ...chars ];
+                }));
+                this.elements.forEach((element => {
+                    if (types.lines || this.settings.absolute) {
+                        const lines = repositionAfterSplit(element, this.settings, scrollPos);
+                        this.lines = [ ...this.lines, ...lines ];
+                    }
+                }));
+                this.isSplit = true;
+                window.scrollTo(scrollPos[0], scrollPos[1]);
+                cleanup();
+            }
+            revert() {
+                if (this.isSplit) {
+                    this.lines = null;
+                    this.words = null;
+                    this.chars = null;
+                    this.isSplit = false;
+                }
+                SplitType.revert(this.elements);
+            }
+        }
         function _assertThisInitialized(self) {
             if (self === void 0) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
             return self;
@@ -3655,7 +4128,7 @@
             units: {
                 lineHeight: ""
             }
-        }, _defaults = {
+        }, gsap_core_defaults = {
             duration: .5,
             overwrite: false,
             delay: 0
@@ -3706,7 +4179,7 @@
             while (i--) targets[i] && (targets[i]._gsap || (targets[i]._gsap = new GSCache(targets[i], harnessPlugin))) || targets.splice(i, 1);
             return targets;
         }, _getCache = function _getCache(target) {
-            return target._gsap || _harness(toArray(target))[0]._gsap;
+            return target._gsap || _harness(gsap_core_toArray(target))[0]._gsap;
         }, _getProperty = function _getProperty(target, property, v) {
             return (v = target[property]) && _isFunction(v) ? target[property]() : _isUndefined(v) && target.getAttribute && target.getAttribute(property) || v;
         }, _forEachName = function _forEachName(names, func) {
@@ -3992,15 +4465,15 @@
             if (accumulator === void 0) accumulator = [];
             return ar.forEach((function(value) {
                 var _accumulator;
-                return _isString(value) && !leaveStrings || _isArrayLike(value, 1) ? (_accumulator = accumulator).push.apply(_accumulator, toArray(value)) : accumulator.push(value);
+                return _isString(value) && !leaveStrings || _isArrayLike(value, 1) ? (_accumulator = accumulator).push.apply(_accumulator, gsap_core_toArray(value)) : accumulator.push(value);
             })) || accumulator;
-        }, toArray = function toArray(value, scope, leaveStrings) {
+        }, gsap_core_toArray = function toArray(value, scope, leaveStrings) {
             return _context && !scope && _context.selector ? _context.selector(value) : _isString(value) && !leaveStrings && (_coreInitted || !_wake()) ? _slice.call((scope || _doc).querySelectorAll(value), 0) : _isArray(value) ? _flatten(value, leaveStrings) : _isArrayLike(value) ? _slice.call(value, 0) : value ? [ value ] : [];
         }, selector = function selector(value) {
-            value = toArray(value)[0] || _warn("Invalid scope") || {};
+            value = gsap_core_toArray(value)[0] || _warn("Invalid scope") || {};
             return function(v) {
                 var el = value.current || value.nativeElement || value;
-                return toArray(v, el.querySelectorAll ? el : el === value ? _warn("Invalid scope") || _doc.createElement("div") : value);
+                return gsap_core_toArray(v, el.querySelectorAll ? el : el === value ? _warn("Invalid scope") || _doc.createElement("div") : value);
             };
         }, shuffle = function shuffle(a) {
             return a.sort((function() {
@@ -4062,7 +4535,7 @@
             if (!isArray && _isObject(snapTo)) {
                 radius = isArray = snapTo.radius || _bigNum;
                 if (snapTo.values) {
-                    snapTo = toArray(snapTo.values);
+                    snapTo = gsap_core_toArray(snapTo.values);
                     if (is2D = !_isNumber(snapTo[0])) radius *= radius;
                 } else snapTo = _roundModifier(snapTo.increment);
             }
@@ -4543,7 +5016,7 @@
                 };
             }
         };
-        _defaults.ease = _easeMap["quad.out"];
+        gsap_core_defaults.ease = _easeMap["quad.out"];
         _forEachName("onComplete,onUpdate,onStart,onRepeat,onReverseComplete,onInterrupt", (function(name) {
             return _callbackNames += name + "," + name + "Params,";
         }));
@@ -5058,7 +5531,7 @@
                 return this;
             };
             _proto2.getTweensOf = function getTweensOf(targets, onlyActive) {
-                var children, a = [], parsedTargets = toArray(targets), child = this._first, isGlobalTime = _isNumber(onlyActive);
+                var children, a = [], parsedTargets = gsap_core_toArray(targets), child = this._first, isGlobalTime = _isNumber(onlyActive);
                 while (child) {
                     if (child instanceof Tween) {
                         if (_arrayContainsAny(child._targets, parsedTargets) && (isGlobalTime ? (!_overwritingTween || child._initted && child._ts) && child.globalTime(0) <= onlyActive && child.globalTime(child.totalDuration()) > onlyActive : !onlyActive || child.isActive())) a.push(child);
@@ -5270,8 +5743,8 @@
         }, _initTween = function _initTween(tween, time, tTime) {
             var cleanVars, i, p, pt, target, hasPriority, gsData, harness, plugin, ptLookup, index, harnessVars, overwritten, vars = tween.vars, ease = vars.ease, startAt = vars.startAt, immediateRender = vars.immediateRender, lazy = vars.lazy, onUpdate = vars.onUpdate, onUpdateParams = vars.onUpdateParams, callbackScope = vars.callbackScope, runBackwards = vars.runBackwards, yoyoEase = vars.yoyoEase, keyframes = vars.keyframes, autoRevert = vars.autoRevert, dur = tween._dur, prevStartAt = tween._startAt, targets = tween._targets, parent = tween.parent, fullTargets = parent && parent.data === "nested" ? parent.vars.targets : targets, autoOverwrite = tween._overwrite === "auto" && !_suppressOverwrites, tl = tween.timeline;
             tl && (!keyframes || !ease) && (ease = "none");
-            tween._ease = _parseEase(ease, _defaults.ease);
-            tween._yEase = yoyoEase ? _invertEase(_parseEase(yoyoEase === true ? ease : yoyoEase, _defaults.ease)) : 0;
+            tween._ease = _parseEase(ease, gsap_core_defaults.ease);
+            tween._yEase = yoyoEase ? _invertEase(_parseEase(yoyoEase === true ? ease : yoyoEase, gsap_core_defaults.ease)) : 0;
             if (yoyoEase && tween._yoyo && !tween._repeat) {
                 yoyoEase = tween._yEase;
                 tween._yEase = tween._ease;
@@ -5433,7 +5906,7 @@
                     position = null;
                 }
                 _this3 = _Animation2.call(this, skipInherit ? vars : _inheritDefaults(vars)) || this;
-                var tl, i, copy, l, p, curTarget, staggerFunc, staggerVarsToMerge, _this3$vars = _this3.vars, duration = _this3$vars.duration, delay = _this3$vars.delay, immediateRender = _this3$vars.immediateRender, stagger = _this3$vars.stagger, overwrite = _this3$vars.overwrite, keyframes = _this3$vars.keyframes, defaults = _this3$vars.defaults, scrollTrigger = _this3$vars.scrollTrigger, yoyoEase = _this3$vars.yoyoEase, parent = vars.parent || _globalTimeline, parsedTargets = (_isArray(targets) || _isTypedArray(targets) ? _isNumber(targets[0]) : "length" in vars) ? [ targets ] : toArray(targets);
+                var tl, i, copy, l, p, curTarget, staggerFunc, staggerVarsToMerge, _this3$vars = _this3.vars, duration = _this3$vars.duration, delay = _this3$vars.delay, immediateRender = _this3$vars.immediateRender, stagger = _this3$vars.stagger, overwrite = _this3$vars.overwrite, keyframes = _this3$vars.keyframes, defaults = _this3$vars.defaults, scrollTrigger = _this3$vars.scrollTrigger, yoyoEase = _this3$vars.yoyoEase, parent = vars.parent || _globalTimeline, parsedTargets = (_isArray(targets) || _isTypedArray(targets) ? _isNumber(targets[0]) : "length" in vars) ? [ targets ] : gsap_core_toArray(targets);
                 _this3._targets = parsedTargets.length ? _harness(parsedTargets) : _warn("GSAP target " + targets + " not found. https://greensock.com", !_config.nullTargetWarn) || [];
                 _this3._ptLookup = [];
                 _this3._overwrite = overwrite;
@@ -5637,7 +6110,7 @@
                     this.parent && tDur !== this.timeline.totalDuration() && _setDuration(this, this._dur * this.timeline._tDur / tDur, 0, 1);
                     return this;
                 }
-                var overwrittenProps, curLookup, curOverwriteProps, props, p, pt, i, parsedTargets = this._targets, killingTargets = targets ? toArray(targets) : parsedTargets, propTweenLookup = this._ptLookup, firstPT = this._pt;
+                var overwrittenProps, curLookup, curOverwriteProps, props, p, pt, i, parsedTargets = this._targets, killingTargets = targets ? gsap_core_toArray(targets) : parsedTargets, propTweenLookup = this._ptLookup, firstPT = this._pt;
                 if ((!vars || vars === "all") && _arraysMatch(parsedTargets, killingTargets)) {
                     vars === "all" && (this._pt = 0);
                     return _interrupt(this);
@@ -5811,7 +6284,7 @@
         _globals.TimelineLite = _globals.TimelineMax = Timeline;
         _globalTimeline = new Timeline({
             sortChildren: false,
-            defaults: _defaults,
+            defaults: gsap_core_defaults,
             autoRemoveChildren: true,
             id: "root",
             smoothChildTiming: true
@@ -5988,7 +6461,7 @@
                 return _globalTimeline.getTweensOf(targets, onlyActive);
             },
             getProperty: function getProperty(target, property, unit, uncache) {
-                _isString(target) && (target = toArray(target)[0]);
+                _isString(target) && (target = gsap_core_toArray(target)[0]);
                 var getter = _getCache(target || {}).get, format = unit ? _passThrough : _numericIfPossible;
                 unit === "native" && (unit = "");
                 return !target ? target : !property ? function(property, unit, uncache) {
@@ -5996,7 +6469,7 @@
                 } : format((_plugins[property] && _plugins[property].get || getter)(target, property, unit, uncache));
             },
             quickSetter: function quickSetter(target, property, unit) {
-                target = toArray(target);
+                target = gsap_core_toArray(target);
                 if (target.length > 1) {
                     var setters = target.map((function(t) {
                         return gsap.quickSetter(t, property, unit);
@@ -6031,8 +6504,8 @@
                 return _globalTimeline.getTweensOf(targets, true).length > 0;
             },
             defaults: function defaults(value) {
-                value && value.ease && (value.ease = _parseEase(value.ease, _defaults.ease));
-                return _mergeDeep(_defaults, value || {});
+                value && value.ease && (value.ease = _parseEase(value.ease, gsap_core_defaults.ease));
+                return _mergeDeep(gsap_core_defaults, value || {});
             },
             config: function config(value) {
                 return _mergeDeep(_config, value || {});
@@ -6043,7 +6516,7 @@
                     return pluginName && !_plugins[pluginName] && !_globals[pluginName] && _warn(name + " effect requires " + pluginName + " plugin.");
                 }));
                 _effects[name] = function(targets, vars, tl) {
-                    return effect(toArray(targets), _setDefaults(vars || {}, defaults), tl);
+                    return effect(gsap_core_toArray(targets), _setDefaults(vars || {}, defaults), tl);
                 };
                 if (extendTimeline) Timeline.prototype[name] = function(targets, vars, position) {
                     return this.add(_effects[name](targets, _isObject(vars) ? vars : (position = vars) && {}, this), position);
@@ -6108,7 +6581,7 @@
                 getUnit,
                 clamp,
                 splitColor,
-                toArray,
+                toArray: gsap_core_toArray,
                 selector,
                 mapRange,
                 pipe,
@@ -7158,6 +7631,17 @@
             window.addEventListener("resize", headerHeight);
             floatingBallsInitStyle();
             window.addEventListener("resize", floatingBallsInitStyle);
+        }));
+        document.addEventListener("DOMContentLoaded", (() => {
+            const text = new SplitType(document.querySelectorAll("[data-split]"), {
+                types: "words"
+            });
+            gsapWithCSS.from(text.words, {
+                y: 20,
+                opacity: 0,
+                stagger: .1,
+                duration: 1
+            });
         }));
         function headerHeight() {
             const header = document.querySelector(".header");
