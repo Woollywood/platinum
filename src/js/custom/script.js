@@ -3,6 +3,7 @@ import { isMobile } from './functions.js';
 
 // Подключение списка активных модулей
 import { flsModules } from './modules.js';
+import SplitType from 'split-type';
 
 import { gsap, TimelineLite } from 'gsap/all.js';
 
@@ -129,6 +130,16 @@ window.addEventListener('load', (event) => {
 
 	floatingBallsInitStyle();
 	window.addEventListener('resize', floatingBallsInitStyle);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+	const text = new SplitType(document.querySelectorAll('[data-split]'), { types: 'words' });
+	gsap.from(text.words, {
+		y: 20,
+		opacity: 0,
+		stagger: 0.1,
+		duration: 1,
+	});
 });
 
 function headerHeight() {
