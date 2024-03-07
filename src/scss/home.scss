@@ -801,7 +801,7 @@
 	&__users {
 		display: flex;
 		justify-content: center;
-		gap: rem(20);
+		@include adaptiveValue('gap', 20, 12);
 		align-items: center;
 
 		&:not(:last-child) {
@@ -812,9 +812,15 @@
 	&__user {
 		&--center {
 			.feedback__user-avatar {
-				flex: 0 0 rem(176);
+				flex: 0 1 rem(176);
 				width: rem(176);
 				height: rem(176);
+
+				@media (max-width: $mobileSmall) {
+					flex: 0 1 rem(156);
+					width: rem(156);
+					height: rem(156);
+				}
 			}
 		}
 	}
@@ -825,6 +831,12 @@
 		height: rem(112);
 		border-radius: 50%;
 		overflow: hidden;
+
+		@media (max-width: $mobileSmall) {
+			flex: 0 0 rem(92);
+			width: rem(92);
+			height: rem(92);
+		}
 	}
 
 	&__user-info {
