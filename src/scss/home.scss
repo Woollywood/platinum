@@ -826,11 +826,21 @@
 	}
 
 	&__user-avatar {
+		position: relative;
 		flex: 0 0 rem(112);
 		width: rem(112);
 		height: rem(112);
 		border-radius: 50%;
 		overflow: hidden;
+
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 
 		@media (max-width: $mobileSmall) {
 			flex: 0 0 rem(92);
